@@ -3,16 +3,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.slothsoft.example</groupId>
-	<artifactId>de.slothsoft.example.build</artifactId>
+	<groupId>de.slothsoft.mp4spliterator</groupId>
+	<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>de.slothsoft.example</module>
-		<module>de.slothsoft.example.it</module>
-		<module>de.slothsoft.example.feature</module>
-		<module>de.slothsoft.example.product</module>
+		<module>de.slothsoft.mp4spliterator</module>
+		<module>de.slothsoft.mp4spliterator.it</module>
+		<module>de.slothsoft.mp4spliterator.feature</module>
+		<module>de.slothsoft.mp4spliterator.product</module>
 	</modules>
 
 	<properties>
@@ -51,8 +51,8 @@
 					<resolver>p2</resolver>
 					<target>
 						<artifact>
-							<groupId>de.slothsoft.example</groupId>
-							<artifactId>de.slothsoft.example.build</artifactId>
+							<groupId>de.slothsoft.mp4spliterator</groupId>
+							<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
 							<version>${project.version}</version>
 							<classifier>platform</classifier>
 						</artifact>

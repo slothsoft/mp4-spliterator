@@ -12,8 +12,7 @@
 	<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 		<repository location="http://localhost:8080/site/"/>
 
-		<!-- Do not add versions here; they are managed by the project maven-p2 -->
-		<unit id="de.slothsoft.random" version="0.0.0"/>
+		<unit id="org.mp4parser.isoparser" version="0.0.0"/>
 	</location>
 </locations>
 </target>

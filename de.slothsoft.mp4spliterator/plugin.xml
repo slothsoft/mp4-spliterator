@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <extension point="org.eclipse.core.runtime.applications" id="application">
+      <application>
+         <run class="de.slothsoft.mp4spliterator.Application"> </run>
+      </application>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.products" id="product">
+      <product name="Mp4Spliterator Application" application="de.slothsoft.mp4spliterator.application">
+         <property name="appName" value="Mp4Spliterator Application"> </property>
+      </product>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.slothsoft.mp4spliterator.Perspective"
+            id="de.slothsoft.mp4spliterator.Perspective"
+            name="Perspective">
+      </perspective>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <view
+            class="de.slothsoft.mp4spliterator.videos.VideoFolderView"
+            icon="icons/sample.png"
+            id="de.slothsoft.mp4spliterator.VideoFolderView"
+            inject="true"
+            name="Mp4Spliterators">
+      </view>
+   </extension>
+
+</plugin>
