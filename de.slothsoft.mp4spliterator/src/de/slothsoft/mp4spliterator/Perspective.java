@@ -15,7 +15,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(true);
 
-		final IFolderLayout mainFolder = layout.createFolder("main", IPageLayout.BOTTOM, 0.5f, layout.getEditorArea());
+		final IFolderLayout mainFolder = layout.createFolder("main", IPageLayout.LEFT, 0.2f, layout.getEditorArea());
 		mainFolder.addView(VideoFolderView.ID);
 	}
 

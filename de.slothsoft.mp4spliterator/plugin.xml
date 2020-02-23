@@ -13,6 +13,16 @@
          <property name="appName" value="Mp4Spliterator Application"> </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="de.slothsoft.mp4spliterator.videos.VideoEditor"
+            default="false"
+            icon="icons/file_video.png"
+            id="de.slothsoft.mp4spliterator.VideoEditor"
+            name="%editor.videoEditor">
+      </editor>
+   </extension>
    
    <extension
          point="org.eclipse.ui.perspectives">
@@ -26,10 +36,10 @@
    <extension point="org.eclipse.ui.views">
       <view
             class="de.slothsoft.mp4spliterator.videos.VideoFolderView"
-            icon="icons/sample.png"
+            icon="icons/video-folder.png"
             id="de.slothsoft.mp4spliterator.VideoFolderView"
             inject="true"
-            name="Mp4Spliterators">
+            name="%view.videoFolder">
       </view>
    </extension>
 

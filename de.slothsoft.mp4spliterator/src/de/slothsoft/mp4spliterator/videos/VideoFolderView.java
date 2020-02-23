@@ -1,60 +1,134 @@
 package de.slothsoft.mp4spliterator.videos;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+
+import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
+import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
+import de.slothsoft.mp4spliterator.core.Video;
+import de.slothsoft.mp4spliterator.core.VideoReader;
 
 public class VideoFolderView extends ViewPart {
 
 	public static final String ID = "de.slothsoft.mp4spliterator.VideoFolderView";
 
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		@Override
-		public String getColumnText(Object obj, int index) {
-			return getText(obj);
-		}
-		@Override
-		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
-		}
-		@Override
-		public Image getImage(Object obj) {
-			return VideoFolderView.this.workbench.getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
-		}
-	}
-
 	@Inject
 	IWorkbench workbench;
 
-	private TableViewer viewer;
+	private Set<String> supportedExtensions;
+	private TreeViewer viewer;
 
 	@Override
 	public void createPartControl(Composite parent) {
-		this.viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		this.viewer.setContentProvider(ArrayContentProvider.getInstance());
-		this.viewer.setLabelProvider(new ViewLabelProvider());
-		this.viewer.setInput(Arrays.asList("A","B","C"));
+		this.supportedExtensions = VideoReader.getAllSupportedExtensions();
+
+		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.viewer.setLabelProvider(new FileLabelProvider());
+		this.viewer.setContentProvider(new FileTreeContentProvider());
+		this.viewer.setInput(new File(System.getProperty("user.home"), "Videos"));
+		this.viewer.addDoubleClickListener(e -> openSelectedFile());
 
 		getSite().setSelectionProvider(this.viewer);
+	}
+
+	private void openSelectedFile() {
+		final File selectedFile = (File) ((IStructuredSelection) this.viewer.getSelection()).getFirstElement();
+		if (selectedFile == null) {
+			// TODO Auto-generated catch block
+		} else if (hasSupportedExtension(selectedFile)) {
+			openFile(selectedFile);
+		} else {
+			// TODO Auto-generated catch block
+		}
+	}
+
+	public void openFile(File file) {
+		try {
+			final Video video = VideoReader.readVideo(file);
+			final VideoEditorInput input = new VideoEditorInput(file, video);
+			this.workbench.getActiveWorkbenchWindow().getActivePage().openEditor(input, VideoEditor.ID);
+		} catch (final PartInitException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void setFocus() {
 		this.viewer.getControl().setFocus();
 	}
+
+	boolean hasSupportedExtension(File file) {
+		return this.supportedExtensions.contains(getExtension(file));
+	}
+
+	static String getExtension(File file) {
+		final String fileName = file.getName();
+		final int index = fileName.lastIndexOf('.');
+		if (index > 0) {
+			return fileName.substring(index + 1).toLowerCase();
+		}
+		return "";
+	}
+
+	/*
+	 * Specific implementations
+	 */
+
+	static final class FileTreeContentProvider implements ITreeContentProvider {
+
+		@Override
+		public Object[] getElements(Object inputElement) {
+			return ((File) inputElement).listFiles();
+		}
+
+		@Override
+		public Object[] getChildren(Object parentElement) {
+			return ((File) parentElement).listFiles();
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			return ((File) element).getParentFile();
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			return ((File) element).isDirectory();
+		}
+	}
+
+	final class FileLabelProvider extends LabelProvider {
+
+		@Override
+		public String getText(Object element) {
+			return ((File) element).getName();
+		}
+
+		@Override
+		public Image getImage(Object obj) {
+			if (((File) obj).isDirectory()) {
+				return Mp4SpliteratorPlugin.getDefault().getImage(Mp4SpliteratorImages.OBJ_FOLDER);
+			}
+			if (hasSupportedExtension((File) obj)) {
+				return Mp4SpliteratorPlugin.getDefault().getImage(Mp4SpliteratorImages.OBJ_FILE_VIDEO);
+			}
+			return Mp4SpliteratorPlugin.getDefault().getImage(Mp4SpliteratorImages.OBJ_FILE);
+		}
+	}
+
 }
