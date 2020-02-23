@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="Eclipse Target Platform" sequenceNumber="7">
+<locations>
+	<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<repository location="http://download.eclipse.org/releases/2018-12"/>
+
+		<unit id="org.eclipse.equinox.sdk.feature.group" version="3.16.0.v20181130-2106"/>
+		<unit id="org.eclipse.emf.common.feature.group" version="2.15.0.v20180914-1817"/>
+		<unit id="org.eclipse.emf.ecore.feature.group" version="2.16.0.v20181124-0637"/>
+		<unit id="org.eclipse.sdk.feature.group" version="4.10.0.v20181206-1038"/>
+	</location>
+	
+	<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<repository location="http://localhost:8080/site/"/>
+
+		<!-- Do not add versions here; they are managed by the project maven-p2 -->
+		<unit id="de.slothsoft.random" version="0.0.0"/>
+	</location>
+</locations>
+</target>
