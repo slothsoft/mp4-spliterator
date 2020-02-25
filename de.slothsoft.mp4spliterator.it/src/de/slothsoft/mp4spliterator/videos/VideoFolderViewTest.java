@@ -3,12 +3,35 @@ package de.slothsoft.mp4spliterator.videos;
 import java.io.File;
 
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class VideoFolderViewTest {
+
+	private IWorkbenchPage activePage;
+
+	@Before
+	public void setUp() {
+		this.activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		closeAllViews();
+	}
+
+	private void closeAllViews() {
+		for (final IViewReference view : this.activePage.getViewReferences()) {
+			this.activePage.hideView(view);
+		}
+	}
+
+	@After
+	public void tearDown() {
+		closeAllViews();
+	}
 
 	@Test
 	public void testOpenView() throws Exception {
@@ -16,8 +39,7 @@ public class VideoFolderViewTest {
 	}
 
 	private VideoFolderView openView() throws PartInitException {
-		final IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.showView(VideoFolderView.ID);
+		final IViewPart view = this.activePage.showView(VideoFolderView.ID);
 		Assert.assertTrue("Error opening view: " + view, view instanceof VideoFolderView);
 		return (VideoFolderView) view;
 	}

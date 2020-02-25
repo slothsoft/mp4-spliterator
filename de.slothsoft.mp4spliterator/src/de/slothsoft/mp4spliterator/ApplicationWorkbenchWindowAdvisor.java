@@ -14,7 +14,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	@Override
 	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
-		return new ApplicationActionBarAdvisor(configurer);
+		return new ActionBarAdvisor(configurer);
 	}
 
 	@Override
@@ -23,6 +23,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setInitialSize(new Point(400, 300));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(false);
-		configurer.setTitle("Mp4Spliterator Application");
+		configurer.setTitle(Messages.getString("ApplicationTitle")); //$NON-NLS-1$
 	}
 }

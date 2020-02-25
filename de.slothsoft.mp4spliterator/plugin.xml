@@ -13,6 +13,7 @@
          <property name="appName" value="Mp4Spliterator Application"> </property>
       </product>
    </extension>
+   
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -21,13 +22,15 @@
             name="%command.exportSplit">
       </command>
    </extension>
+   
    <extension
          point="org.eclipse.ui.commandImages">
       <image
             commandId="de.slothsoft.mp4spliterator.exportSplit"
-            icon="icons/file_video.png">
+            icon="icons/export-split.png">
       </image>
    </extension>
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -38,6 +41,7 @@
             name="%editor.videoEditor">
       </editor>
    </extension>
+   
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution

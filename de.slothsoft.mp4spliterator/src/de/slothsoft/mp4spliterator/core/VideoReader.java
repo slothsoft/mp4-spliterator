@@ -35,7 +35,21 @@ public interface VideoReader {
 		}
 	}
 
+	/**
+	 * Gets the extension this video reader can open.
+	 *
+	 * @return a set of extensions
+	 */
+
 	Set<String> getSupportedExtensions();
+
+	/**
+	 * Reads an input stream.
+	 *
+	 * @param input an input stream
+	 * @return a video
+	 * @throws IOException for any kind of exception
+	 */
 
 	Video readVideo(InputStream input) throws IOException;
 }

@@ -22,6 +22,14 @@ import de.slothsoft.mp4spliterator.core.Chapter;
 import de.slothsoft.mp4spliterator.core.Video;
 import de.slothsoft.mp4spliterator.core.VideoReader;
 
+/**
+ * An implementation of {@link VideoReader} using
+ * <a href="https://github.com/sannies/mp4parser">sannies mp4parser</a>.
+ *
+ * @author Stef Schulz
+ * @since 1.0.0
+ */
+
 public class SanniesVideoReader implements VideoReader {
 
 	private UnknownBox chapterBox;

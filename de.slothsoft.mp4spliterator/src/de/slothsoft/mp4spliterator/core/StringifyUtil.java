@@ -1,5 +1,12 @@
 package de.slothsoft.mp4spliterator.core;
 
+/**
+ * A handy util class for mapping stuff to {@link String}.
+ *
+ * @author Stef Schulz
+ * @since 1.0.0
+ */
+
 public final class StringifyUtil {
 
 	public static String stringifyTime(long startTime) {
