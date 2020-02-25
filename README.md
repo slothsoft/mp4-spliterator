@@ -11,8 +11,9 @@ Bla bla.
 - [Third Party Libraries](#third-party-libraries)
     - [Icons](#icons)
     - [MP4](#mp4)
+- [Versions](#versions)
+- [Features](#features)
 - [How to](#how-to)
-- [To Do List](#to-do-list)
 - [License](#license)
 
 
@@ -31,12 +32,22 @@ Example files are from [here](http://techslides.com/sample-webm-ogg-and-mp4-vide
 
 
 
+##  Versions
+
+
+| Version       | Issues | Changes       | Download      |
+| ------------- | ------ | ------------- | ------------- |
+| Future | [Issues](https://github.com/slothsoft/mp4-spliterator/issues) | | |
+| 1.0.0 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/1?closed=1) | first prototype | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.0.0)
+
+
+
+##  Features
+
+If something is missing, request it via [a new issue](https://github.com/slothsoft/mp4-spliterator/issues/new).
+
+
 ## How to
-
-## To Do List
-
-_(All open issues can be found [here](https://github.com/slothsoft/mp4-spliterator/issues).)_
-
 
 
 ## License
