@@ -27,6 +27,8 @@ Icons are from [icons8](https://icons8.de/).
 
 To get the meta data from MP4 files, [mp4parser](https://github.com/sannies/mp4parser) is used. Since this library doesn't support reading chapter files (yet), I tried implementing it with the help of the [official spec](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf) ("chpl" box, page 30).
 
+Example files are from [here](http://techslides.com/sample-webm-ogg-and-mp4-video-files-for-html5).
+
 
 
 ## How to

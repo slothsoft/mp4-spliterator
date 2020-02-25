@@ -1,8 +1,11 @@
 package de.slothsoft.mp4spliterator.videos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -18,6 +21,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -25,15 +29,20 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.EditorPart;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.StringifyUtil;
 
 public class VideoEditor extends EditorPart {
 
 	public static final String ID = "de.slothsoft.mp4spliterator.VideoEditor"; //$NON-NLS-1$
+
+	public static final String URL_GENERAL_SECTION = "toolbar:de.slothsoft.mp4spliterator.generalSection";//$NON-NLS-1$
+	public static final String URL_CHAPTER_SECTION = "toolbar:de.slothsoft.mp4spliterator.chapterSection";//$NON-NLS-1$
 
 	private TableViewer viewer;
 
@@ -62,11 +71,13 @@ public class VideoEditor extends EditorPart {
 		final Composite formBody = form.getBody();
 		formBody.setLayout(new GridLayout());
 
-		final Composite generalSection = createSection(formBody, toolkit, Messages.getString("General"));
+		final Composite generalSection = createSection(formBody, toolkit, Messages.getString("General"),
+				URL_GENERAL_SECTION);
 		generalSection.getParent().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		createGeneralSection(generalSection, toolkit);
 
-		final Composite chapterSection = createSection(formBody, toolkit, Messages.getString("Chapters"));
+		final Composite chapterSection = createSection(formBody, toolkit, Messages.getString("Chapters"),
+				URL_CHAPTER_SECTION);
 		chapterSection.getParent().setLayoutData(GridDataFactory.fillDefaults().hint(50, 50).grab(true, true).create());
 		createChapterSection(chapterSection, toolkit);
 
@@ -90,9 +101,17 @@ public class VideoEditor extends EditorPart {
 		return result;
 	}
 
-	private static Composite createSection(Composite parent, FormToolkit toolkit, String title) {
+	private Composite createSection(Composite parent, FormToolkit toolkit, String title, String toolbarUrl) {
 		final Section section = toolkit.createSection(parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR);
 		section.setText(title);
+
+		if (toolbarUrl != null) {
+			final ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+			final ToolBar toolbar = toolBarManager.createControl(section);
+			getSite().getService(IMenuService.class).populateContributionManager(toolBarManager, toolbarUrl);
+			toolBarManager.update(true);
+			section.setTextClient(toolbar);
+		}
 
 		final Composite client = toolkit.createComposite(section, SWT.WRAP);
 		section.setClient(client);
@@ -115,7 +134,8 @@ public class VideoEditor extends EditorPart {
 		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
 
 		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("StartTime"));
-		startTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> stringifyStartTime(c.getStartTime())));
+		startTimeColumn
+				.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
 		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
 
 		this.viewer.setInput(getEditorInput().getVideo().getChapters());
@@ -123,10 +143,6 @@ public class VideoEditor extends EditorPart {
 		for (final TableItem tableItem : table.getItems()) {
 			tableItem.setChecked(true);
 		}
-	}
-
-	private String stringifyStartTime(long startTime) {
-		return "" + startTime;
 	}
 
 	private static TableViewerColumn createColumn(TableViewer tableViewer, String columnTitle) {
@@ -164,6 +180,16 @@ public class VideoEditor extends EditorPart {
 		return false;
 	}
 
+	public List<Chapter> getSelectedChapters() {
+		final List<Chapter> result = new ArrayList<>(this.viewer.getTable().getItemCount());
+		for (final TableItem item : this.viewer.getTable().getItems()) {
+			if (item.getChecked()) {
+				result.add((Chapter) item.getData());
+			}
+		}
+		return result;
+	}
+
 	/*
 	 * Specific implementations
 	 */
@@ -181,4 +207,5 @@ public class VideoEditor extends EditorPart {
 			return this.toStringFunction.apply((Chapter) element);
 		}
 	}
+
 }
