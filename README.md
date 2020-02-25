@@ -1,6 +1,6 @@
 # MP4 Spliterator
 
-[![Build Status](https://travis-ci.org/slothsoft/mp4-spliterator.svg?branch=master)](https://travis-ci.org/slothsoft/mp4-spliterator)
+[![Build Status](https://travis-ci.com/slothsoft/mp4-spliterator.svg?branch=master)](https://travis-ci.com/slothsoft/mp4-spliterator)
 
 Bla bla.
 
