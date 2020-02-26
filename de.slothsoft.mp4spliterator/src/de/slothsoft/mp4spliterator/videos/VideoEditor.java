@@ -122,7 +122,7 @@ public class VideoEditor extends EditorPart {
 		final TableColumnLayout layout = new TableColumnLayout();
 		parent.setLayout(layout);
 
-		final Table table = toolkit.createTable(parent, SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
+		final Table table = toolkit.createTable(parent, SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
 		table.setHeaderVisible(true);
 
 		this.viewer = new TableViewer(table);
@@ -134,8 +134,7 @@ public class VideoEditor extends EditorPart {
 		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
 
 		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("StartTime"));
-		startTimeColumn
-				.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
+		startTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
 		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
 
 		this.viewer.setInput(getEditorInput().getVideo().getChapters());

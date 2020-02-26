@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -19,10 +20,12 @@ import org.eclipse.ui.part.ViewPart;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
+import de.slothsoft.mp4spliterator.Mp4SpliteratorPreferences;
+import de.slothsoft.mp4spliterator.common.Refreshable;
 import de.slothsoft.mp4spliterator.core.Video;
 import de.slothsoft.mp4spliterator.core.VideoReader;
 
-public class VideoFolderView extends ViewPart {
+public class VideoFolderView extends ViewPart implements Refreshable {
 
 	public static final String ID = "de.slothsoft.mp4spliterator.VideoFolderView";
 
@@ -39,7 +42,8 @@ public class VideoFolderView extends ViewPart {
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		this.viewer.setLabelProvider(new FileLabelProvider());
 		this.viewer.setContentProvider(new FileTreeContentProvider());
-		this.viewer.setInput(new File(System.getProperty("user.home"), "Videos"));
+		this.viewer.setInput(new File(Mp4SpliteratorPlugin.getDefault().getPreferenceStore()
+				.getString(Mp4SpliteratorPreferences.VIDEO_FOLDER)));
 		this.viewer.addDoubleClickListener(e -> openSelectedFile());
 
 		getSite().setSelectionProvider(this.viewer);
@@ -83,6 +87,16 @@ public class VideoFolderView extends ViewPart {
 			return fileName.substring(index + 1).toLowerCase();
 		}
 		return "";
+	}
+
+	@Override
+	public void refresh() {
+		final Object[] expandedTreePaths = this.viewer.getExpandedElements();
+		final ISelection selection = this.viewer.getSelection();
+		this.viewer.setInput(new File(Mp4SpliteratorPlugin.getDefault().getPreferenceStore()
+				.getString(Mp4SpliteratorPreferences.VIDEO_FOLDER)));
+		this.viewer.setExpandedElements(expandedTreePaths);
+		this.viewer.setSelection(selection);
 	}
 
 	/*

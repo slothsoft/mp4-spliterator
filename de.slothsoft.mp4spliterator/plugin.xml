@@ -7,6 +7,12 @@
          <run class="de.slothsoft.mp4spliterator.Application"> </run>
       </application>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.slothsoft.mp4spliterator.internal.PreferenceInitializer">
+      </initializer>
+   </extension>
 
    <extension point="org.eclipse.core.runtime.products" id="product">
       <product name="Mp4Spliterator Application" application="de.slothsoft.mp4spliterator.application">
@@ -21,6 +27,15 @@
             id="de.slothsoft.mp4spliterator.exportSplit"
             name="%command.exportSplit">
       </command>
+      <command
+            id="de.slothsoft.mp4spliterator.refresh"
+            name="%command.refresh">
+      </command>
+      <command
+            defaultHandler="de.slothsoft.mp4spliterator.videos.OpenVideoFolderViewHandler"
+            id="de.slothsoft.mp4spliterator.openVideoFolderView"
+            name="%command.openVideoFolderView">
+      </command>
    </extension>
    
    <extension
@@ -28,6 +43,14 @@
       <image
             commandId="de.slothsoft.mp4spliterator.exportSplit"
             icon="icons/export-split.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.refresh"
+            icon="icons/refresh.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.openVideoFolderView"
+            icon="icons/video-folder.png">
       </image>
    </extension>
    
@@ -40,6 +63,21 @@
             id="de.slothsoft.mp4spliterator.VideoEditor"
             name="%editor.videoEditor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="de.slothsoft.mp4spliterator.common.RefreshHandler"
+            commandId="de.slothsoft.mp4spliterator.refresh">
+         <activeWhen>
+            <with
+                  variable="activePart">
+               <instanceof
+                     value="de.slothsoft.mp4spliterator.common.Refreshable">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
    
    <extension
@@ -59,12 +97,40 @@
                   style="push">
             </command>
          </menu>
+         <menu
+               id="menu.window"
+               label="%menu.window">
+            <command
+                  commandId="de.slothsoft.mp4spliterator.openVideoFolderView"
+                  style="push">
+            </command>
+            <separator
+                  name="de.slothsoft.mp4spliterator.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="menu.help"
+               label="%menu.help">
+         </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="toolbar:de.slothsoft.mp4spliterator.chapterSection">
          <command
                commandId="de.slothsoft.mp4spliterator.exportSplit"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:de.slothsoft.mp4spliterator.VideoFolderView">
+         <command
+               commandId="de.slothsoft.mp4spliterator.refresh"
                style="push">
          </command>
       </menuContribution>
@@ -77,6 +143,14 @@
             id="de.slothsoft.mp4spliterator.Perspective"
             name="Perspective">
       </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="de.slothsoft.mp4spliterator.videos.GeneralPreferencePage"
+            id="de.slothsoft.mp4spliterator.videos.GeneralPreferencePage"
+            name="%preferencePage.general">
+      </page>
    </extension>
    
    <extension point="org.eclipse.ui.views">
