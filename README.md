@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.com/slothsoft/mp4-spliterator.svg?branch=master)](https://travis-ci.com/slothsoft/mp4-spliterator)
 
-Bla bla.
-
+An application for splitting MP4 files into chapters. 
 
 
 **Content of this ReadMe:**

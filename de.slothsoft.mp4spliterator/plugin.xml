@@ -16,7 +16,9 @@
 
    <extension point="org.eclipse.core.runtime.products" id="product">
       <product name="Mp4Spliterator Application" application="de.slothsoft.mp4spliterator.application">
-         <property name="appName" value="Mp4Spliterator Application"> </property>
+         <property name="appName" value="MP4 Spliterator"> </property>
+		 <property name="aboutText" value="%about"/>
+		 <property name="aboutImage" value="icons/about.png"/>
       </product>
    </extension>
    
@@ -44,6 +46,11 @@
       <command
             id="de.slothsoft.mp4spliterator.openVideoFromView"
             name="%command.openVideo">
+      </command>
+      <command
+            defaultHandler="de.slothsoft.mp4spliterator.about.AboutHandler"
+            id="de.slothsoft.mp4spliterator.about"
+            name="%command.about">
       </command>
    </extension>
    
@@ -161,6 +168,10 @@
          <menu
                id="menu.help"
                label="%menu.help">
+            <command
+                  commandId="de.slothsoft.mp4spliterator.about"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution

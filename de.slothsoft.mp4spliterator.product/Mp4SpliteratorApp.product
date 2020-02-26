@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Mp4Spliterator Application" uid="de.slothsoft.mp4spliterator.product" id="de.slothsoft.mp4spliterator.product" application="de.slothsoft.mp4spliterator.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="Mp4 Spliterator" uid="de.slothsoft.mp4spliterator.product" id="de.slothsoft.mp4spliterator.product" application="de.slothsoft.mp4spliterator.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
