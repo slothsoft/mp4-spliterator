@@ -6,6 +6,7 @@ public class Chapter {
 
 	private String title;
 	private long startTime;
+	private long endTime;
 
 	public Chapter(String title) {
 		this.title = Objects.requireNonNull(title);
@@ -35,6 +36,19 @@ public class Chapter {
 
 	public void setTitle(String title) {
 		this.title = Objects.requireNonNull(title);
+	}
+
+	public long getEndTime() {
+		return this.endTime;
+	}
+
+	public Chapter endTime(long newEndTime) {
+		setEndTime(newEndTime);
+		return this;
+	}
+
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
 	}
 
 	@Override

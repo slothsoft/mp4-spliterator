@@ -137,6 +137,10 @@ public class VideoEditor extends EditorPart {
 		startTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
 		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
 
+		final TableViewerColumn endTimeColumn = createColumn(this.viewer, Messages.getString("EndTime"));
+		endTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getEndTime())));
+		layout.setColumnData(endTimeColumn.getColumn(), new ColumnWeightData(50));
+
 		this.viewer.setInput(getEditorInput().getVideo().getChapters());
 
 		for (final TableItem tableItem : table.getItems()) {

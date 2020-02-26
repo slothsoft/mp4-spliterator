@@ -66,6 +66,7 @@ public class SanniesVideoReader implements VideoReader {
 			}
 			if (box instanceof MovieHeaderBox) {
 				this.timescale = ((MovieHeaderBox) box).getTimescale();
+				readMovieHeader(video, (MovieHeaderBox) box);
 			}
 
 			// recursion
@@ -98,13 +99,24 @@ public class SanniesVideoReader implements VideoReader {
 		final int count = IsoTypeReader.readUInt8(buffer);
 		final List<Chapter> chapters = new ArrayList<>(count);
 
+		Chapter lastChapter = null;
+
 		for (int i = 0; i < count; i++) {
 			final long timestamp = IsoTypeReader.readUInt64(buffer);
 
 			final int titleSize = IsoTypeReader.readUInt8(buffer);
 			final String title = IsoTypeReader.readString(buffer, titleSize);
 
-			chapters.add(new Chapter(title).startTime(timestamp / timescale / 10));
+			final long time = timestamp / timescale / 10;
+
+			if (lastChapter != null) {
+				lastChapter.setEndTime(time);
+			}
+			lastChapter = new Chapter(title).startTime(time);
+			chapters.add(lastChapter);
+		}
+		if (lastChapter != null) {
+			lastChapter.setEndTime(video.getLength());
 		}
 		video.setChapters(chapters);
 	}
@@ -117,6 +129,10 @@ public class SanniesVideoReader implements VideoReader {
 
 	private static void readName(Video video, AppleNameBox nameBox) {
 		video.setTitle(nameBox.getValue());
+	}
+
+	private static void readMovieHeader(Video video, MovieHeaderBox box) {
+		video.setLength(box.getDuration());
 	}
 
 }

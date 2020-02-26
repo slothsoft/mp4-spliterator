@@ -28,14 +28,17 @@ public class SanniesVideoReaderTest {
 			final Chapter chapter0 = chapters.get(0);
 			Assert.assertEquals("Zero", chapter0.getTitle());
 			Assert.assertEquals(0, chapter0.getStartTime());
+			Assert.assertEquals(1000, chapter0.getEndTime());
 
 			final Chapter chapter1 = chapters.get(1);
 			Assert.assertEquals("One", chapter1.getTitle());
 			Assert.assertEquals(1000, chapter1.getStartTime());
+			Assert.assertEquals(2000, chapter1.getEndTime());
 
 			final Chapter chapter2 = chapters.get(2);
 			Assert.assertEquals("Two", chapter2.getTitle());
 			Assert.assertEquals(2000, chapter2.getStartTime());
+			Assert.assertEquals(5568, chapter2.getEndTime());
 		}
 	}
 

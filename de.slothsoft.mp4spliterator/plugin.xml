@@ -151,6 +151,11 @@
             id="de.slothsoft.mp4spliterator.videos.GeneralPreferencePage"
             name="%preferencePage.general">
       </page>
+      <page
+            class="de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegPreferencePage"
+            id="de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegPreferencePage"
+            name="%preferencePage.ffmpeg">
+      </page>
    </extension>
    
    <extension point="org.eclipse.ui.views">
