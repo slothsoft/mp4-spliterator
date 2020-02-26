@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -16,6 +17,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -44,7 +46,7 @@ public class VideoEditor extends EditorPart {
 	public static final String URL_GENERAL_SECTION = "toolbar:de.slothsoft.mp4spliterator.generalSection";//$NON-NLS-1$
 	public static final String URL_CHAPTER_SECTION = "toolbar:de.slothsoft.mp4spliterator.chapterSection";//$NON-NLS-1$
 
-	private TableViewer viewer;
+	TableViewer viewer;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -119,10 +121,15 @@ public class VideoEditor extends EditorPart {
 	}
 
 	private void createChapterSection(Composite parent, FormToolkit toolkit) {
-		final TableColumnLayout layout = new TableColumnLayout();
-		parent.setLayout(layout);
+		parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-		final Table table = toolkit.createTable(parent, SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
+		final Composite tableComposite = toolkit.createComposite(parent);
+		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		final TableColumnLayout layout = new TableColumnLayout();
+		tableComposite.setLayout(layout);
+
+		final Table table = toolkit.createTable(tableComposite,
+				SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
 		table.setHeaderVisible(true);
 
 		this.viewer = new TableViewer(table);
@@ -142,10 +149,14 @@ public class VideoEditor extends EditorPart {
 		layout.setColumnData(endTimeColumn.getColumn(), new ColumnWeightData(50));
 
 		this.viewer.setInput(getEditorInput().getVideo().getChapters());
+		checkAll(true);
 
-		for (final TableItem tableItem : table.getItems()) {
-			tableItem.setChecked(true);
-		}
+		final Composite buttonComposite = toolkit.createComposite(parent);
+		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+
+		createButton(toolkit, buttonComposite, Messages.getString("CheckAll"), () -> checkAll(true));
+		createButton(toolkit, buttonComposite, Messages.getString("CheckNone"), () -> checkAll(false));
 	}
 
 	private static TableViewerColumn createColumn(TableViewer tableViewer, String columnTitle) {
@@ -153,6 +164,19 @@ public class VideoEditor extends EditorPart {
 
 		final TableColumn column = result.getColumn();
 		column.setText(columnTitle);
+		return result;
+	}
+
+	void checkAll(boolean checked) {
+		for (final TableItem tableItem : this.viewer.getTable().getItems()) {
+			tableItem.setChecked(checked);
+		}
+	}
+
+	private static Button createButton(FormToolkit toolkit, Composite parent, String buttonText, Runnable action) {
+		final Button result = toolkit.createButton(parent, buttonText, SWT.PUSH);
+		result.addListener(SWT.Selection, e -> action.run());
+		result.setLayoutData(GridDataFactory.fillDefaults().create());
 		return result;
 	}
 

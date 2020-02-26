@@ -1,7 +1,6 @@
 package de.slothsoft.mp4spliterator.videos;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -15,14 +14,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPreferences;
 import de.slothsoft.mp4spliterator.common.Refreshable;
-import de.slothsoft.mp4spliterator.core.Video;
+import de.slothsoft.mp4spliterator.common.StatusBuilder;
 import de.slothsoft.mp4spliterator.core.VideoReader;
 
 public class VideoFolderView extends ViewPart implements Refreshable {
@@ -49,26 +47,19 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 		getSite().setSelectionProvider(this.viewer);
 	}
 
-	private void openSelectedFile() {
+	public void openSelectedFile() {
 		final File selectedFile = (File) ((IStructuredSelection) this.viewer.getSelection()).getFirstElement();
 		if (selectedFile == null) {
-			// TODO Auto-generated catch block
+			new StatusBuilder(Messages.getString("NoFileSelected")).show();
 		} else if (hasSupportedExtension(selectedFile)) {
 			openFile(selectedFile);
 		} else {
-			// TODO Auto-generated catch block
+			new StatusBuilder(Messages.getString("CannotParseVideo")).show();
 		}
 	}
 
 	public void openFile(File file) {
-		try {
-			final Video video = VideoReader.readVideo(file);
-			final VideoEditorInput input = new VideoEditorInput(file, video);
-			this.workbench.getActiveWorkbenchWindow().getActivePage().openEditor(input, VideoEditor.ID);
-		} catch (final PartInitException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		OpenVideoHandler.openVideoFile(file);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package de.slothsoft.mp4spliterator.videos;
 
 import java.io.File;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -43,4 +44,23 @@ public class VideoEditorTest {
 		return (VideoEditor) editor;
 	}
 
+	@Test
+	public void testCheckAllTrue() throws Exception {
+		final VideoEditor editor = openEditor(new VideoEditorInput(new File("test.txt"), new Video("Test")));
+		editor.checkAll(true);
+
+		for (final TableItem item : editor.viewer.getTable().getItems()) {
+			Assert.assertTrue(item.getChecked());
+		}
+	}
+
+	@Test
+	public void testCheckAllFalse() throws Exception {
+		final VideoEditor editor = openEditor(new VideoEditorInput(new File("test.txt"), new Video("Test")));
+		editor.checkAll(false);
+
+		for (final TableItem item : editor.viewer.getTable().getItems()) {
+			Assert.assertFalse(item.getChecked());
+		}
+	}
 }

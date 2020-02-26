@@ -36,6 +36,15 @@
             id="de.slothsoft.mp4spliterator.openVideoFolderView"
             name="%command.openVideoFolderView">
       </command>
+      <command
+            defaultHandler="de.slothsoft.mp4spliterator.videos.OpenVideoHandler"
+            id="de.slothsoft.mp4spliterator.openVideo"
+            name="%command.openVideo">
+      </command>
+      <command
+            id="de.slothsoft.mp4spliterator.openVideoFromView"
+            name="%command.openVideo">
+      </command>
    </extension>
    
    <extension
@@ -51,6 +60,14 @@
       <image
             commandId="de.slothsoft.mp4spliterator.openVideoFolderView"
             icon="icons/video-folder.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.openVideo"
+            icon="icons/file_video.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.openVideoFromView"
+            icon="icons/file_video.png">
       </image>
    </extension>
    
@@ -78,6 +95,30 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="de.slothsoft.mp4spliterator.videos.OpenVideoFromViewHandler"
+            commandId="de.slothsoft.mp4spliterator.openVideoFromView">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePart">
+                  <instanceof
+                        value="de.slothsoft.mp4spliterator.videos.VideoFolderView">
+                  </instanceof>
+               </with>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="java.io.File">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    
    <extension
@@ -88,6 +129,10 @@
          <menu
                id="menu.file"
                label="%menu.file">
+            <command
+                  commandId="de.slothsoft.mp4spliterator.openVideo"
+                  style="push">
+            </command>
             <separator
                   name="de.slothsoft.mp4spliterator.separator1"
                   visible="true">
@@ -129,6 +174,14 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:de.slothsoft.mp4spliterator.VideoFolderView">
+         <command
+               commandId="de.slothsoft.mp4spliterator.openVideoFromView"
+               style="push">
+         </command>
+         <separator
+               name="de.slothsoft.mp4spliterator.separator2"
+               visible="true">
+         </separator>
          <command
                commandId="de.slothsoft.mp4spliterator.refresh"
                style="push">
