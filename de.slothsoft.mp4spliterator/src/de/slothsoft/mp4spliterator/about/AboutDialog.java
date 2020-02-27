@@ -324,12 +324,12 @@ public class AboutDialog extends TrayDialog {
 
 	private Control createThirdPartyArea(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(GridLayoutFactory.fillDefaults().create());
+		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		final Composite tableComposite = new Composite(composite, SWT.NONE);
 		final TableColumnLayout layout = new TableColumnLayout();
 		tableComposite.setLayout(layout);
-		final Table table = new Table(tableComposite, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
+		final Table table = new Table(tableComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
 		table.setHeaderVisible(true);
 
 		this.viewer = new TableViewer(table);
@@ -339,19 +339,19 @@ public class AboutDialog extends TrayDialog {
 
 		final TableViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("DisplayName"));
 		titleColumn.setLabelProvider(new FunctionLabelProvider(ThirdPartyDependency::getDisplayName));
-		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
+		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(50));
 
 		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("Url"));
 		startTimeColumn.setLabelProvider(new FunctionLabelProvider(ThirdPartyDependency::getUrl));
-		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
+		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(150));
 
 		final Button goToButton = new Button(composite, SWT.NONE);
 		goToButton.setText(Messages.getString("GoTo"));
 		goToButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).create());
 		goToButton.addListener(SWT.Selection, e -> openSelectedDependencyExternally());
 
-		this.browser = new Browser(composite, SWT.NONE);
-		this.browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(100, 100).create());
+		this.browser = new Browser(composite, SWT.BORDER);
+		this.browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(100, 100).create());
 
 		// do stuff with the actual dependencies
 
