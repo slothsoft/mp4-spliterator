@@ -1,15 +1,29 @@
 package de.slothsoft.mp4spliterator.about;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlAdapter;
@@ -20,10 +34,16 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -36,10 +56,10 @@ import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.services.IServiceLocator;
 
+import de.slothsoft.mp4spliterator.common.StatusBuilder;
+
 /**
  * Displays information about the product.
- *
- * Copy of {@link org.eclipse.ui.internal.dialogs.AboutDialog}.
  */
 
 @SuppressWarnings("restriction")
@@ -49,14 +69,14 @@ public class AboutDialog extends TrayDialog {
 	private static final int MAX_IMAGE_WIDTH_FOR_TEXT = 250;
 
 	private String productName;
-
 	private final IProduct product;
-
 	private final ArrayList<Image> images = new ArrayList<>();
 
 	private StyledText text;
-
 	private AboutTextManager aboutTextManager;
+
+	private Browser browser;
+	private TableViewer viewer;
 
 	/**
 	 * Create an instance of the AboutDialog for the given window.
@@ -94,6 +114,21 @@ public class AboutDialog extends TrayDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		final TabFolder folder = new TabFolder(parent, SWT.NONE);
+		folder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(540, 200).create());
+
+		final TabItem mainTab = new TabItem(folder, SWT.NONE);
+		mainTab.setText(Messages.getString("About"));
+		mainTab.setControl(createMainArea(folder));
+
+		final TabItem thirdPartyTab = new TabItem(folder, SWT.NONE);
+		thirdPartyTab.setText(Messages.getString("ThirdParty"));
+		thirdPartyTab.setControl(createThirdPartyArea(folder));
+
+		return folder;
+	}
+
+	private Control createMainArea(Composite parent) {
 		// brand the about box if there is product info
 		Image aboutImage = null;
 		AboutItem item = null;
@@ -209,10 +244,6 @@ public class AboutDialog extends TrayDialog {
 			textComposite.setLayout(layout);
 
 			this.text = new StyledText(textComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
-
-			// Don't set caret to 'null' as this causes https://bugs.eclipse.org/293263.
-//    		text.setCaret(null);
-
 			this.text.setFont(parent.getFont());
 			this.text.setText(item.getText());
 			this.text.setCursor(null);
@@ -291,6 +322,74 @@ public class AboutDialog extends TrayDialog {
 		return workArea;
 	}
 
+	private Control createThirdPartyArea(Composite parent) {
+		final Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(GridLayoutFactory.fillDefaults().create());
+
+		final Composite tableComposite = new Composite(composite, SWT.NONE);
+		final TableColumnLayout layout = new TableColumnLayout();
+		tableComposite.setLayout(layout);
+		final Table table = new Table(tableComposite, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
+		table.setHeaderVisible(true);
+
+		this.viewer = new TableViewer(table);
+		this.viewer.setContentProvider(ArrayContentProvider.getInstance());
+		this.viewer.setLabelProvider(new LabelProvider());
+		this.viewer.addSelectionChangedListener(e -> openSelectedDependencyInBrowser());
+
+		final TableViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("DisplayName"));
+		titleColumn.setLabelProvider(new FunctionLabelProvider(ThirdPartyDependency::getDisplayName));
+		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
+
+		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("Url"));
+		startTimeColumn.setLabelProvider(new FunctionLabelProvider(ThirdPartyDependency::getUrl));
+		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
+
+		final Button goToButton = new Button(composite, SWT.NONE);
+		goToButton.setText(Messages.getString("GoTo"));
+		goToButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).create());
+		goToButton.addListener(SWT.Selection, e -> openSelectedDependencyExternally());
+
+		this.browser = new Browser(composite, SWT.NONE);
+		this.browser.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(100, 100).create());
+
+		// do stuff with the actual dependencies
+
+		final List<ThirdPartyDependency> thirdPartyDependencies = ThirdPartyDependency.readDefaults();
+		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+				.hint(100, (thirdPartyDependencies.size() + 2) * table.getItemHeight()).create());
+		this.viewer.setInput(thirdPartyDependencies);
+		this.viewer.setSelection(new StructuredSelection(thirdPartyDependencies.get(0)));
+
+		return composite;
+	}
+
+	private static TableViewerColumn createColumn(TableViewer tableViewer, String columnTitle) {
+		final TableViewerColumn result = new TableViewerColumn(tableViewer, SWT.NONE);
+
+		final TableColumn column = result.getColumn();
+		column.setText(columnTitle);
+		return result;
+	}
+
+	private void openSelectedDependencyExternally() {
+		final ThirdPartyDependency dependency = getSelectedDependency();
+		Program.launch(dependency.url);
+	}
+
+	private void openSelectedDependencyInBrowser() {
+		try {
+			final ThirdPartyDependency dependency = getSelectedDependency();
+			this.browser.setUrl(dependency.licenseUrl);
+		} catch (final Exception exception) {
+			new StatusBuilder(exception.getMessage()).exception(exception).show();
+		}
+	}
+
+	private ThirdPartyDependency getSelectedDependency() {
+		return (ThirdPartyDependency) ((IStructuredSelection) this.viewer.getSelection()).getFirstElement();
+	}
+
 	/**
 	 * Create the context menu for the text widget.
 	 *
@@ -316,5 +415,23 @@ public class AboutDialog extends TrayDialog {
 	@Override
 	protected boolean isResizable() {
 		return true;
+	}
+
+	/*
+	 * Specific implementations
+	 */
+
+	static final class FunctionLabelProvider extends ColumnLabelProvider {
+
+		private final Function<ThirdPartyDependency, String> toStringFunction;
+
+		public FunctionLabelProvider(Function<ThirdPartyDependency, String> toStringFunction) {
+			this.toStringFunction = toStringFunction;
+		}
+
+		@Override
+		public String getText(Object element) {
+			return this.toStringFunction.apply((ThirdPartyDependency) element);
+		}
 	}
 }

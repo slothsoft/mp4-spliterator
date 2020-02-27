@@ -20,7 +20,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	@Override
 	public void preWindowOpen() {
 		final IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-		configurer.setInitialSize(new Point(400, 300));
+		configurer.setInitialSize(new Point(800, 600));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(false);
 		configurer.setTitle(Messages.getString("ApplicationTitle")); //$NON-NLS-1$
