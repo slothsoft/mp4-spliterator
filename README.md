@@ -9,7 +9,7 @@
 
 An application for splitting MP4 files into chapters: 
 
-![Screenshot](docs/resources/images/screenshot.png | width=300)
+<img alt="Screenshot" src="docs/resources/images/screenshot.png" width="300"/>
 
 
 
