@@ -12,7 +12,7 @@
 	</parent>
 
 	<!-- This project assembles the result of the product into a ZIP -->
-	
+
 	<properties>
 		<release-folder>${basedir}/target/release</release-folder>
 		<product-id>de.slothsoft.mp4spliterator.product</product-id>
@@ -42,7 +42,7 @@
 							</resources>
 						</configuration>
 					</execution>
-					
+
 					<!-- Copy the LICENSE file -->
 
 					<execution>
@@ -81,7 +81,7 @@
 							</resources>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>copy-readme-start</id>
 						<phase>package</phase>
@@ -98,9 +98,67 @@
 							</resources>
 						</configuration>
 					</execution>
+
+					<!-- And now we get the HTML Readme file and put it in there too -->
+
+					<execution>
+						<id>copy-dev-readme</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>../</directory>
+									<includes>
+										<include>README.md</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
-			
+
+			<plugin>
+				<groupId>com.ruleoftech</groupId>
+				<artifactId>markdown-page-generator-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputDirectory>${project.build.directory}</inputDirectory>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<headerHtmlFile>${basedir}/header.html</headerHtmlFile>
+							<footerHtmlFile>${basedir}/footer.html</footerHtmlFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-file</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<sourceFile>${project.build.directory}/README.html</sourceFile>
+							<destinationFile>${release-folder}/Developer Manual.html</destinationFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Now that we have everything, create a ZIP file -->
 
 			<plugin>
