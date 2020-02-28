@@ -20,7 +20,7 @@ An application for splitting MP4 files into chapters.
 
 ### Icons
 
-Icons are from [icons8](https://icons8.de/).
+Application icons are from [icons8](https://icons8.de/). The flags in the README are from [H. J. Nilsson](https://github.com/hjnilsson/country-flags).
 
 
 ### MP4

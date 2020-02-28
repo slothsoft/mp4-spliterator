@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.slothsoft.mp4spliterator.assembly</groupId>
+	<artifactId>de.slothsoft.mp4spliterator.assembly</artifactId>
+
+	<parent>
+		<groupId>de.slothsoft.mp4spliterator</groupId>
+		<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<!-- This project assembles the result of the product into a ZIP -->
+	
+	<properties>
+		<release-folder>${basedir}/target/release</release-folder>
+		<product-id>de.slothsoft.mp4spliterator.product</product-id>
+	</properties>
+
+	<build>
+		<plugins>
+
+			<!-- Copy the runnable JAR over so we can put it into the ZIP -->
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-eclipse-application</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${release-folder}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../${product-id}/target/products/${product-id}/win32/win32/x86_64/</directory>
+									<exclude>eclipsec.exe</exclude>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+					<!-- Copy the LICENSE file -->
+
+					<execution>
+						<id>copy-license</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${release-folder}/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>../</directory>
+									<includes>
+										<include>LICENSE</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<!-- Copy the user docs, too -->
+
+					<execution>
+						<id>copy-readme</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${release-folder}/docs</outputDirectory>
+							<resources>
+								<resource>
+									<directory>../docs</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<id>copy-readme-start</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${release-folder}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>./</directory>
+									<include>README.html</include>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Now that we have everything, create a ZIP file -->
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>mp4spliterator-${project.version}</finalName>
+					<descriptors>
+						<descriptor>zip.xml</descriptor>
+					</descriptors>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

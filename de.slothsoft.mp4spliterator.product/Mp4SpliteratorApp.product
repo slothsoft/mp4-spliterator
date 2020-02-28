@@ -3,6 +3,13 @@
 
 <product name="Mp4 Spliterator" uid="de.slothsoft.mp4spliterator.product" id="de.slothsoft.mp4spliterator.product" application="de.slothsoft.mp4spliterator.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
+   <aboutInfo>
+      <image path="icons/about.png"/>
+      <text>
+         %about
+      </text>
+   </aboutInfo>
+
    <configIni use="default">
    </configIni>
 
@@ -13,7 +20,22 @@
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="logos/logo16.png" i32="logos/logo32.png" i48="logos/logo48.png" i64="logos/logo64.png" i128="logos/logo128.png" i256="logos/logo256.png"/>
+
+   <launcher name="Mp4 Spliterator">
+      <win useIco="false">
+         <bmp
+            winSmallHigh="icons/logo16.ico"
+            winSmallLow="icons/logo16_8bit.ico"
+            winMediumHigh="icons/logo32.ico"
+            winMediumLow="icons/logo32_8bit.ico"
+            winLargeHigh="icons/logo48.ico"
+            winLargeLow="icons/logo48_8bit.ico"/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -126,5 +148,12 @@
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
    </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>
