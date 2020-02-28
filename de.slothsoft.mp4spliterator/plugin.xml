@@ -15,8 +15,8 @@
    </extension>
 
    <extension point="org.eclipse.core.runtime.products" id="product">
-      <product name="Mp4 Spliterator" application="de.slothsoft.mp4spliterator.application">
-         <property name="appName" value="Mp4 Spliterator"> </property>
+      <product name="MP4 Spliterator" application="de.slothsoft.mp4spliterator.application">
+         <property name="appName" value="MP4 Spliterator"> </property>
          <property
                name="windowImages"
                value="logos/logo16.png,logos/logo32.png,logos/logo48.png,logos/logo64.png,logos/logo128.png,logos/logo256.png">

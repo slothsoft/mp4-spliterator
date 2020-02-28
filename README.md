@@ -7,7 +7,10 @@
 - **Open Issues:** <https://github.com/slothsoft/mp4-spliterator/issues>
 - **User Manual:** [Hosted on GitHub](https://slothsoft.github.io/mp4-spliterator/)
 
-An application for splitting MP4 files into chapters. 
+An application for splitting MP4 files into chapters: 
+
+![Screenshot](docs/resources/images/screenshot.png | width=300)
+
 
 
 **Content of this ReadMe:**

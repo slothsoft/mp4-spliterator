@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Mp4 Spliterator" uid="de.slothsoft.mp4spliterator.product" id="de.slothsoft.mp4spliterator.product" application="de.slothsoft.mp4spliterator.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="MP4 Spliterator" uid="de.slothsoft.mp4spliterator.product" id="de.slothsoft.mp4spliterator.product" application="de.slothsoft.mp4spliterator.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="icons/about.png"/>
@@ -22,7 +22,7 @@
 
    <windowImages i16="logos/logo16.png" i32="logos/logo32.png" i48="logos/logo48.png" i64="logos/logo64.png" i128="logos/logo128.png" i256="logos/logo256.png"/>
 
-   <launcher name="Mp4 Spliterator">
+   <launcher name="MP4 Spliterator">
       <win useIco="false">
          <bmp
             winSmallHigh="icons/logo16.ico"
