@@ -41,6 +41,17 @@ Just download the last release and extract it in a folder of your choice, then d
 
 ### Using the Application
 
+
+<p>Splitting an MP4 into chapters is an easy process which can be done in very 
+little clicks:</p>
+
+<ul>  
+	<li>1st a) Double click on a video in the <b><img src="docs/resources/images/video-folder@2x.png" width="20"/> Video Folder</b>. </li>
+	<li>1st b) <i>Or</i> open a video directly via the menu <i>File → <img src="docs/resources/images/file_video@2x.png" width="20"/> Open Video</i>. </li>
+	<li>2nd The video will be opened in a separate section where you can check and uncheck the chapters.</li>
+	<li>3rd Click <b><img src="docs/resources/images/export-split@2x.png" width="20"/> Export Chapters Separately</b> and choose a folder. The chapters will be exported into this folder.</li>
+</ul>
+
 *(More information can be found in the  [user manual](https://slothsoft.github.io/mp4-spliterator/).)*
 
 
