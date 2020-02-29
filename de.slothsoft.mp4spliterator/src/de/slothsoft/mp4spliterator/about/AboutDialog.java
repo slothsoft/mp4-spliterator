@@ -142,7 +142,7 @@ public class AboutDialog extends TrayDialog {
 			if (aboutImage == null || aboutImage.getBounds().width <= MAX_IMAGE_WIDTH_FOR_TEXT) {
 				final String aboutText = ProductProperties.getAboutText(this.product);
 				if (aboutText != null) {
-					item = AboutTextManager.scan(aboutText);
+					item = AboutTextManager.scan(replaceVersions(aboutText));
 				}
 			}
 
@@ -320,6 +320,10 @@ public class AboutDialog extends TrayDialog {
 		bar.setLayoutData(data);
 
 		return workArea;
+	}
+
+	private String replaceVersions(String aboutText) {
+		return aboutText.replace("[version]", this.product.getDefiningBundle().getVersion().toString());
 	}
 
 	private Control createThirdPartyArea(Composite parent) {
