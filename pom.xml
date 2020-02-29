@@ -159,4 +159,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	<scm>
+		<developerConnection>scm:git:https://github.com/slothsoft/mp4-spliterator.git</developerConnection>
+	</scm>
 </project>
