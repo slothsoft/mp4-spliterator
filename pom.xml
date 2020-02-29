@@ -20,6 +20,7 @@
 
 	<properties>
 		<tycho.version>1.5.0</tycho.version>
+		<maven-scm-version>1.11.2</maven-scm-version>
 		<maven.build.timestamp.format>yyyyMMdd_HHmmss</maven.build.timestamp.format>
 	</properties>
 
@@ -39,8 +40,23 @@
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+					<version>${maven-scm-version}</version>
 				</plugin>
 
 				<plugin>
@@ -57,6 +73,60 @@
 		</pluginManagement>
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<!-- we never deploy complete applications -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			
+			<!-- This is the place where the tycho-versions-plugin must update the 
+				MANIFEST/feature/product files to their respective pom versions -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<!-- don't deploy application, not even on release -->
+					<goals>install</goals>
+					<preparationGoals>org.eclipse.tycho:tycho-versions-plugin:${tycho.version}:update-eclipse-metadata
+						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:add
+						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:checkin</preparationGoals>
+					<completionGoals>org.eclipse.tycho:tycho-versions-plugin:${tycho-version}:update-eclipse-metadata
+						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:add
+						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:checkin</completionGoals>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+
+			<!-- Add the changed files to the git changeset, checkin (=commit and 
+				push) the changed Eclipse/OSGi files. -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<goals>
+							<goal>add</goal>
+							<goal>checkin</goal>
+						</goals>
+						<configuration>
+							<includes>**/META-INF/MANIFEST.MF,**/feature.xml,**/*.product,**/category.xml</includes>
+							<excludes>**/target/**</excludes>
+							<message>Changing the version to reflect the pom versions for the
+								release</message>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Configure Tycho -->
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
