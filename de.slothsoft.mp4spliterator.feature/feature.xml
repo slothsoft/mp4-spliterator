@@ -2,7 +2,7 @@
 <feature
       id="de.slothsoft.mp4spliterator.feature"
       label="Mp4Spliterator Feature"
-      version="1.0.0.qualifier"
+      version="1.0.0"
       provider-name="Slothsoft">
 
    <copyright url="http://www.mp4spliterator.com/copyright">
