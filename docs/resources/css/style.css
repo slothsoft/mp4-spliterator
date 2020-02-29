@@ -59,6 +59,10 @@ a:hover, a:active {
 	border-bottom: 1px solid black;
 }
 
+li {
+	line-height: 24px;
+}
+
 ul#header-links, ul.horizontal-list {
 	list-style: none;
 	padding-left: 0;
