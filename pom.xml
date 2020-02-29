@@ -83,7 +83,7 @@
 				</configuration>
 			</plugin>
 			
-			<!-- This is the place where the tycho-versions-plugin must update the 
+			<!-- This is the place where the tycho.versions-plugin must update the 
 				MANIFEST/feature/product files to their respective pom versions -->
 
 			<plugin>
@@ -92,10 +92,10 @@
 				<configuration>
 					<!-- don't deploy application, not even on release -->
 					<goals>install</goals>
-					<preparationGoals>org.eclipse.tycho:tycho-versions-plugin:${tycho.version}:update-eclipse-metadata
+					<preparationGoals>org.eclipse.tycho:tycho.versions-plugin:${tycho.version}:update-eclipse-metadata
 						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:add
 						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:checkin</preparationGoals>
-					<completionGoals>org.eclipse.tycho:tycho-versions-plugin:${tycho-version}:update-eclipse-metadata
+					<completionGoals>org.eclipse.tycho:tycho.versions-plugin:${tycho.version}:update-eclipse-metadata
 						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:add
 						org.apache.maven.plugins:maven-scm-plugin:${maven-scm-version}:checkin</completionGoals>
 					<tagNameFormat>@{project.version}</tagNameFormat>
