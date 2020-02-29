@@ -58,7 +58,7 @@ public class FfmpegVideoSplitterSanitizeTest {
 
 	@Test
 	public void testSanitizeForbiddenSymbolInFront() throws Exception {
-		final String prefix = "!§$=+#;_";
+		final String prefix = "!ï¿½$=+#;_";
 		Assert.assertEquals(prefix + "_", FfmpegVideoSplitter.sanitize(prefix + this.forbiddenSymbol));
 	}
 

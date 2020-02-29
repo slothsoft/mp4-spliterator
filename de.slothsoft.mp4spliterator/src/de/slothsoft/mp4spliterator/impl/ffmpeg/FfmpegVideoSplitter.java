@@ -44,7 +44,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 
 		for (final Chapter chapter : chapters) {
 			final String startTime = StringifyUtil.stringifyTime(chapter.getStartTime());
-			final String endTime = StringifyUtil.stringifyTime(chapter.getEndTime() - chapter.getStartTime());
+			final String endTime = StringifyUtil.stringifyTime(chapter.getEndTime() - chapter.getStartTime() + 1000);
 			final String prefix = getPrefix(index, entireSize);
 
 			sb.setLength(0);
@@ -72,7 +72,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 	}
 
 	private static String getTargetFileName(File targetFolder, final Chapter chapter, String prefix) {
-		return getTargetFileName(targetFolder, prefix + ' ' + chapter.getTitle());
+		return getTargetFileName(targetFolder, prefix + ' ' + sanitize(chapter.getTitle()));
 	}
 
 	static String getTargetFileName(File targetFolder, String fileName) {
