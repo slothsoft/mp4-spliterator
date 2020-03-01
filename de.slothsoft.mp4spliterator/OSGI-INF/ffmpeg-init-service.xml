@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="de.slothsoft.mp4spliterator.ffmpeg-init-service">
+   <implementation class="de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegInitService"/>
+   <service>
+      <provide interface="de.slothsoft.mp4spliterator.init.InitService"/>
+   </service>
+</scr:component>

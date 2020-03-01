@@ -10,6 +10,7 @@ import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 public class FfmpegPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String FFMPEG_PATH = "ffmpegPath";
+	public static final String FFMPEG_PATH_DEFAULT = "ffmpegPathDefault";
 
 	public FfmpegPreferencePage() {
 		super(GRID);

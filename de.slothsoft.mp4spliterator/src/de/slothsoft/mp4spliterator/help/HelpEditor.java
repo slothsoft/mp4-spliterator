@@ -11,6 +11,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import de.slothsoft.mp4spliterator.Application;
+
 public class HelpEditor extends EditorPart {
 
 	public static final String ID = "de.slothsoft.mp4spliterator.HelpEditor"; //$NON-NLS-1$
@@ -38,7 +40,7 @@ public class HelpEditor extends EditorPart {
 	}
 
 	private String fetchUrl() {
-		final File localHelpFolder = new File(System.getProperty("user.dir"), "docs");
+		final File localHelpFolder = new File(Application.FOLDER, "docs");
 		final File localHelp = new File(localHelpFolder, getEditorInput().getUrl());
 		if (localHelp.exists()) {
 			return localHelp.toURI().toString();

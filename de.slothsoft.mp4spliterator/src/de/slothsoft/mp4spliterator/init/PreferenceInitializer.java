@@ -1,4 +1,4 @@
-package de.slothsoft.mp4spliterator.internal;
+package de.slothsoft.mp4spliterator.init;
 
 import java.io.File;
 
@@ -19,6 +19,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		final IPreferenceStore preferences = Mp4SpliteratorPlugin.getDefault().getPreferenceStore();
 		preferences.setDefault(Mp4SpliteratorPreferences.VIDEO_FOLDER,
 				new File(System.getProperty("user.home"), "Videos").toString());
+		InitService.doToAllServices(s -> s.initializePreferences(preferences));
 	}
 
 }

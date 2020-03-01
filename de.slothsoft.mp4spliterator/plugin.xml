@@ -10,7 +10,7 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="de.slothsoft.mp4spliterator.internal.PreferenceInitializer">
+            class="de.slothsoft.mp4spliterator.init.PreferenceInitializer">
       </initializer>
    </extension>
 
@@ -254,6 +254,12 @@
             id="de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegPreferencePage"
             name="%preferencePage.ffmpeg">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="de.slothsoft.mp4spliterator.init.EarlyStartup">
+      </startup>
    </extension>
    
    <extension point="org.eclipse.ui.views">

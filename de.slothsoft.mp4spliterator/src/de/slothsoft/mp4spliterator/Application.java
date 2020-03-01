@@ -1,5 +1,7 @@
 package de.slothsoft.mp4spliterator;
 
+import java.io.File;
+
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
@@ -11,6 +13,8 @@ import org.eclipse.ui.PlatformUI;
  */
 
 public class Application implements IApplication {
+
+	public static final File FOLDER = new File(System.getProperty("user.dir"));
 
 	@Override
 	public Object start(IApplicationContext context) {
