@@ -151,7 +151,7 @@
 						</goals>
 						<configuration>
 							<sourceFile>${project.build.directory}/README.html</sourceFile>
-							<destinationFile>${release-folder}/Developer Manual.html</destinationFile>
+							<destinationFile>${release-folder}/Developer Doc.html</destinationFile>
 						</configuration>
 					</execution>
 				</executions>

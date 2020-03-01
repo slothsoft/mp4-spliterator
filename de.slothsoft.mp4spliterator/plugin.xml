@@ -62,6 +62,11 @@
             id="de.slothsoft.mp4spliterator.about"
             name="%command.about">
       </command>
+      <command
+            defaultHandler="de.slothsoft.mp4spliterator.help.HelpHandler"
+            id="de.slothsoft.mp4spliterator.help"
+            name="%command.help">
+      </command>
    </extension>
    
    <extension
@@ -86,6 +91,10 @@
             commandId="de.slothsoft.mp4spliterator.openVideoFromView"
             icon="icons/file_video.png">
       </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.help"
+            icon="icons/help.png">
+      </image>
    </extension>
    
    <extension
@@ -96,6 +105,13 @@
             icon="icons/file_video.png"
             id="de.slothsoft.mp4spliterator.VideoEditor"
             name="%editor.videoEditor">
+      </editor>
+      <editor
+            class="de.slothsoft.mp4spliterator.help.HelpEditor"
+            default="false"
+            icon="icons/help.png"
+            id="de.slothsoft.mp4spliterator.HelpEditor"
+            name="%editor.helpEditor">
       </editor>
    </extension>
    <extension
@@ -178,6 +194,14 @@
          <menu
                id="menu.help"
                label="%menu.help">
+            <command
+                  commandId="de.slothsoft.mp4spliterator.help"
+                  style="push">
+            </command>
+            <separator
+                  name="de.slothsoft.mp4spliterator.separator1"
+                  visible="true">
+            </separator>
             <command
                   commandId="de.slothsoft.mp4spliterator.about"
                   style="push">
