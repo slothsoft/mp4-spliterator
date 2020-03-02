@@ -1,6 +1,5 @@
 package de.slothsoft.mp4spliterator.videos;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -8,20 +7,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
@@ -37,7 +26,6 @@ import org.eclipse.ui.part.EditorPart;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.core.Chapter;
-import de.slothsoft.mp4spliterator.core.StringifyUtil;
 
 public class VideoEditor extends EditorPart {
 
@@ -46,7 +34,7 @@ public class VideoEditor extends EditorPart {
 	public static final String URL_GENERAL_SECTION = "toolbar:de.slothsoft.mp4spliterator.generalSection";//$NON-NLS-1$
 	public static final String URL_CHAPTER_SECTION = "toolbar:de.slothsoft.mp4spliterator.chapterSection";//$NON-NLS-1$
 
-	TableViewer viewer;
+	ChapterViewer viewer;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -81,7 +69,7 @@ public class VideoEditor extends EditorPart {
 		final Composite chapterSection = createSection(formBody, toolkit, Messages.getString("Chapters"),
 				URL_CHAPTER_SECTION);
 		chapterSection.getParent().setLayoutData(GridDataFactory.fillDefaults().hint(50, 50).grab(true, true).create());
-		createChapterSection(chapterSection, toolkit);
+		createChapterSection(chapterSection);
 
 		setPartName(getEditorInput().getName());
 	}
@@ -120,70 +108,18 @@ public class VideoEditor extends EditorPart {
 		return client;
 	}
 
-	private void createChapterSection(Composite parent, FormToolkit toolkit) {
+	private void createChapterSection(Composite parent) {
 		parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-		final Composite tableComposite = toolkit.createComposite(parent);
-		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		final TableColumnLayout layout = new TableColumnLayout();
-		tableComposite.setLayout(layout);
-
-		final Table table = toolkit.createTable(tableComposite,
-				SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
-		table.setHeaderVisible(true);
-
-		this.viewer = new TableViewer(table);
-		this.viewer.setContentProvider(ArrayContentProvider.getInstance());
-		this.viewer.setLabelProvider(new LabelProvider());
-
-		final TableViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("Title"));
-		titleColumn.setLabelProvider(new FunctionLabelProvider(Chapter::getTitle));
-		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
-
-		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("StartTime"));
-		startTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
-		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
-
-		final TableViewerColumn endTimeColumn = createColumn(this.viewer, Messages.getString("EndTime"));
-		endTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getEndTime())));
-		layout.setColumnData(endTimeColumn.getColumn(), new ColumnWeightData(50));
-
-		this.viewer.setInput(getEditorInput().getVideo().getChapters());
-		checkAll(true);
-
-		final Composite buttonComposite = toolkit.createComposite(parent);
-		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-
-		createButton(toolkit, buttonComposite, Messages.getString("CheckAll"), () -> checkAll(true));
-		createButton(toolkit, buttonComposite, Messages.getString("CheckNone"), () -> checkAll(false));
-	}
-
-	private static TableViewerColumn createColumn(TableViewer tableViewer, String columnTitle) {
-		final TableViewerColumn result = new TableViewerColumn(tableViewer, SWT.NONE);
-
-		final TableColumn column = result.getColumn();
-		column.setText(columnTitle);
-		return result;
-	}
-
-	void checkAll(boolean checked) {
-		for (final TableItem tableItem : this.viewer.getTable().getItems()) {
-			tableItem.setChecked(checked);
-		}
-	}
-
-	private static Button createButton(FormToolkit toolkit, Composite parent, String buttonText, Runnable action) {
-		final Button result = toolkit.createButton(parent, buttonText, SWT.PUSH);
-		result.addListener(SWT.Selection, e -> action.run());
-		result.setLayoutData(GridDataFactory.fillDefaults().create());
-		return result;
+		this.viewer = new ChapterViewer(parent, SWT.NONE);
+		this.viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		this.viewer.setModel(getEditorInput().getVideo().getChapters());
 	}
 
 	@Override
 	public void setFocus() {
 		if (this.viewer != null) {
-			this.viewer.getControl().setFocus();
+			this.viewer.setFocus();
 		}
 	}
 
@@ -208,13 +144,7 @@ public class VideoEditor extends EditorPart {
 	}
 
 	public List<Chapter> getSelectedChapters() {
-		final List<Chapter> result = new ArrayList<>(this.viewer.getTable().getItemCount());
-		for (final TableItem item : this.viewer.getTable().getItems()) {
-			if (item.getChecked()) {
-				result.add((Chapter) item.getData());
-			}
-		}
-		return result;
+		return this.viewer.getSelectedChapters();
 	}
 
 	/*
