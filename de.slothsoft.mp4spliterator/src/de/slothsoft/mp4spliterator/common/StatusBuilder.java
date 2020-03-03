@@ -10,6 +10,10 @@ import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 
 public class StatusBuilder {
 
+	public static void showStatus(IStatus status) {
+		StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
+	}
+
 	private int severity = IStatus.ERROR;
 	private String pluginId = Mp4SpliteratorPlugin.ID;
 	private String message;
@@ -20,7 +24,7 @@ public class StatusBuilder {
 	}
 
 	public void show() {
-		StatusManager.getManager().handle(build(), StatusManager.SHOW | StatusManager.LOG);
+		showStatus(build());
 	}
 
 	public IStatus build() {

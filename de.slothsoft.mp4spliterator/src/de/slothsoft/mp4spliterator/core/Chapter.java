@@ -2,7 +2,7 @@ package de.slothsoft.mp4spliterator.core;
 
 import java.util.Objects;
 
-public class Chapter {
+public class Chapter implements VideoPart {
 
 	private String title;
 	private long startTime;
@@ -12,6 +12,7 @@ public class Chapter {
 		this.title = Objects.requireNonNull(title);
 	}
 
+	@Override
 	public long getStartTime() {
 		return this.startTime;
 	}
@@ -25,6 +26,7 @@ public class Chapter {
 		this.startTime = startTime;
 	}
 
+	@Override
 	public String getTitle() {
 		return this.title;
 	}
@@ -38,6 +40,7 @@ public class Chapter {
 		this.title = Objects.requireNonNull(title);
 	}
 
+	@Override
 	public long getEndTime() {
 		return this.endTime;
 	}
@@ -52,8 +55,18 @@ public class Chapter {
 	}
 
 	@Override
+	public int hashCode() {
+		return VideoPart.calculateHashCode(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return VideoPart.areEqual(this, obj);
+	}
+
+	@Override
 	public String toString() {
-		return "Chapter [title=" + this.title + ", startTime=" + this.startTime + "]";
+		return "Chapter [title=" + this.title + ", time=" + this.startTime + " -> " + this.endTime + "]";
 	}
 
 }

@@ -11,5 +11,5 @@ public interface VideoSplitter {
 		return new FfmpegVideoSplitter();
 	}
 
-	void splitIntoChapters(File input, File targetFolder, List<Chapter> chapters) throws VideoSplitterException;
+	void splitIntoChapters(File input, File targetFolder, List<VideoPart> chapters) throws VideoSplitterException;
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.Video;
 
 public class SanniesVideoReaderTest {
@@ -21,21 +21,21 @@ public class SanniesVideoReaderTest {
 			Assert.assertNotNull(video);
 			Assert.assertEquals("unknown", video.getTitle());
 
-			final List<Chapter> chapters = video.getChapters();
+			final List<VideoPart> chapters = video.getChapters();
 			Assert.assertNotNull(chapters);
 			Assert.assertEquals(3, chapters.size());
 
-			final Chapter chapter0 = chapters.get(0);
+			final VideoPart chapter0 = chapters.get(0);
 			Assert.assertEquals("Zero", chapter0.getTitle());
 			Assert.assertEquals(0, chapter0.getStartTime());
 			Assert.assertEquals(1000, chapter0.getEndTime());
 
-			final Chapter chapter1 = chapters.get(1);
+			final VideoPart chapter1 = chapters.get(1);
 			Assert.assertEquals("One", chapter1.getTitle());
 			Assert.assertEquals(1000, chapter1.getStartTime());
 			Assert.assertEquals(2000, chapter1.getEndTime());
 
-			final Chapter chapter2 = chapters.get(2);
+			final VideoPart chapter2 = chapters.get(2);
 			Assert.assertEquals("Two", chapter2.getTitle());
 			Assert.assertEquals(2000, chapter2.getStartTime());
 			Assert.assertEquals(5568, chapter2.getEndTime());
@@ -50,7 +50,7 @@ public class SanniesVideoReaderTest {
 			Assert.assertNotNull(video);
 			Assert.assertEquals("unknown", video.getTitle());
 
-			final List<Chapter> chapters = video.getChapters();
+			final List<VideoPart> chapters = video.getChapters();
 			Assert.assertNotNull(chapters);
 			Assert.assertEquals(0, chapters.size());
 		}

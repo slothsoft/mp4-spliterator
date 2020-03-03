@@ -1,36 +1,50 @@
 package de.slothsoft.mp4spliterator.videos;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.common.StatusBuilder;
+import de.slothsoft.mp4spliterator.core.Section;
 import de.slothsoft.mp4spliterator.core.StringifyUtil;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.videos.VideoEditor.FunctionLabelProvider;
 
 public class ChapterViewer extends Composite {
 
 	final FormToolkit toolkit;
-	final TableViewer viewer;
+	final TreeViewer viewer;
 
-	List<Chapter> model = Collections.emptyList();
+	List<VideoPart> model = Collections.emptyList();
+	Consumer<IStatus> statusHandler = StatusBuilder::showStatus;
 
 	public ChapterViewer(Composite parent, int style) {
 		super(parent, style);
@@ -39,26 +53,26 @@ public class ChapterViewer extends Composite {
 		addDisposeListener(e -> this.toolkit.dispose());
 		this.toolkit.adapt(this);
 
-		final TableColumnLayout layout = new TableColumnLayout();
+		final TreeColumnLayout layout = new TreeColumnLayout();
 		setLayout(layout);
 
-		final Table table = this.toolkit.createTable(this,
-				SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
+		final Tree table = this.toolkit.createTree(this,
+				SWT.FULL_SELECTION | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		table.setHeaderVisible(true);
 
-		this.viewer = new TableViewer(table);
-		this.viewer.setContentProvider(ArrayContentProvider.getInstance());
+		this.viewer = new TreeViewer(table);
+		this.viewer.setContentProvider(new TreeArrayContentProvider());
 		this.viewer.setLabelProvider(new LabelProvider());
 
-		final TableViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("Title"));
-		titleColumn.setLabelProvider(new FunctionLabelProvider(Chapter::getTitle));
+		final TreeViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("Title"));
+		titleColumn.setLabelProvider(new FunctionLabelProvider(VideoPart::getTitle));
 		layout.setColumnData(titleColumn.getColumn(), new ColumnWeightData(150));
 
-		final TableViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("StartTime"));
+		final TreeViewerColumn startTimeColumn = createColumn(this.viewer, Messages.getString("StartTime"));
 		startTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getStartTime())));
 		layout.setColumnData(startTimeColumn.getColumn(), new ColumnWeightData(50));
 
-		final TableViewerColumn endTimeColumn = createColumn(this.viewer, Messages.getString("EndTime"));
+		final TreeViewerColumn endTimeColumn = createColumn(this.viewer, Messages.getString("EndTime"));
 		endTimeColumn.setLabelProvider(new FunctionLabelProvider(c -> StringifyUtil.stringifyTime(c.getEndTime())));
 		layout.setColumnData(endTimeColumn.getColumn(), new ColumnWeightData(50));
 
@@ -73,16 +87,16 @@ public class ChapterViewer extends Composite {
 		createButton(this.toolkit, buttonComposite, Messages.getString("CheckNone"), () -> checkAll(false));
 	}
 
-	private static TableViewerColumn createColumn(TableViewer tableViewer, String columnTitle) {
-		final TableViewerColumn result = new TableViewerColumn(tableViewer, SWT.NONE);
+	private static TreeViewerColumn createColumn(TreeViewer tableViewer, String columnTitle) {
+		final TreeViewerColumn result = new TreeViewerColumn(tableViewer, SWT.NONE);
 
-		final TableColumn column = result.getColumn();
+		final TreeColumn column = result.getColumn();
 		column.setText(columnTitle);
 		return result;
 	}
 
 	void checkAll(boolean checked) {
-		for (final TableItem tableItem : this.viewer.getTable().getItems()) {
+		for (final TreeItem tableItem : this.viewer.getTree().getItems()) {
 			tableItem.setChecked(checked);
 		}
 	}
@@ -94,29 +108,195 @@ public class ChapterViewer extends Composite {
 		return result;
 	}
 
-	public List<Chapter> getSelectedChapters() {
-		final List<Chapter> result = new ArrayList<>(this.viewer.getTable().getItemCount());
-		for (final TableItem item : this.viewer.getTable().getItems()) {
+	public List<VideoPart> getCheckedChapters() {
+		final List<VideoPart> result = new ArrayList<>(this.viewer.getTree().getItemCount());
+		for (final TreeItem item : this.viewer.getTree().getItems()) {
 			if (item.getChecked()) {
-				result.add((Chapter) item.getData());
+				result.add((VideoPart) item.getData());
 			}
 		}
 		return result;
 	}
 
-	public List<Chapter> getModel() {
+	public void mergeSelectedChapters() {
+		final List<VideoPart> selectedParts = getSelectedChapters();
+		final IStatus status = validateMergeChapters(selectedParts);
+		if (!status.isOK()) {
+			this.statusHandler.accept(status);
+			return;
+		}
+
+		if (!selectedParts.isEmpty()) {
+			final List<VideoPart> newModel = new ArrayList<>(this.model);
+			final Section mergedSection = mergeParts(selectedParts);
+			final int firstIndex = newModel.indexOf(selectedParts.get(0));
+			newModel.removeAll(selectedParts);
+			newModel.add(firstIndex, mergedSection);
+
+			final ISelection selection = this.viewer.getSelection();
+			setModel(newModel);
+			this.viewer.setSelection(selection);
+			check(Arrays.asList(mergedSection), true);
+			check(Arrays.asList(mergedSection.getParts()), true);
+
+			// if we merge chapters, it's because we want them selected
+			for (final TreeItem item : this.viewer.getTree().getSelection()) {
+				item.setChecked(true);
+			}
+		}
+	}
+
+	private static Section mergeParts(final List<VideoPart> selectedParts) {
+		Section mergedSection = (Section) selectedParts.stream().filter(p -> p instanceof Section).findAny()
+				.orElse(null);
+
+		for (final VideoPart selectedPart : selectedParts) {
+			if (selectedPart == mergedSection) {
+				continue;
+			}
+			if (mergedSection == null) {
+				// first item
+				mergedSection = new Section(selectedPart);
+			} else {
+				if (selectedPart instanceof Section) {
+					mergedSection.addParts(((Section) selectedPart).getParts());
+				} else {
+					mergedSection.addPart(selectedPart);
+				}
+			}
+		}
+		return mergedSection;
+	}
+
+	IStatus validateMergeSelectedChapters() {
+		return validateMergeChapters(getSelectedChapters());
+	}
+
+	IStatus validateMergeChapters(List<VideoPart> selectedParts) {
+		selectedParts.sort(Comparator.comparing(this.model::indexOf));
+
+		if (selectedParts.size() < 2) {
+			return new StatusBuilder(Messages.getString("ErrorLessThanTwo")).build();
+		}
+
+		final int[] indexes = selectedParts.stream().mapToInt(this.model::indexOf).toArray();
+		for (int i = 1; i < indexes.length; i++) {
+			if (indexes[i] < 0) {
+				return new StatusBuilder(MessageFormat.format(Messages.getString("ErrorSectionedChapters"),
+						selectedParts.get(i).getTitle())).build();
+			}
+			if (indexes[i - 1] < 0) {
+				return new StatusBuilder(MessageFormat.format(Messages.getString("ErrorSectionedChapters"),
+						selectedParts.get(i - 1).getTitle())).build();
+			}
+			if (indexes[i] - indexes[i - 1] > 1) {
+				return new StatusBuilder(Messages.getString("ErrorNoNeighbors")).build();
+			}
+		}
+
+		return Status.OK_STATUS;
+	}
+
+	private List<VideoPart> getAllCheckedChapters() {
+		final List<VideoPart> result = new ArrayList<>(this.viewer.getTree().getItemCount());
+		collectAllCheckedChapters(result, this.viewer.getTree().getItems());
+		return result;
+	}
+
+	private static void collectAllCheckedChapters(final List<VideoPart> result, TreeItem[] items) {
+		for (final TreeItem item : items) {
+			if (item.getChecked()) {
+				result.add((VideoPart) item.getData());
+			}
+			collectAllCheckedChapters(result, item.getItems());
+		}
+	}
+
+	void check(List<VideoPart> checkedParts, boolean checked) {
+		check(this.viewer.getTree().getItems(), checkedParts, checked);
+	}
+
+	private void check(TreeItem[] items, List<VideoPart> checkedParts, boolean checked) {
+		for (final TreeItem item : items) {
+			if (checkedParts.contains(item.getData())) {
+				item.setChecked(checked);
+			}
+			check(item.getItems(), checkedParts, checked);
+		}
+	}
+
+	public List<VideoPart> getModel() {
 		return this.model;
 	}
 
-	public ChapterViewer model(List<Chapter> newModel) {
+	public ChapterViewer model(List<VideoPart> newModel) {
 		setModel(newModel);
 		return this;
 	}
 
-	public void setModel(List<Chapter> model) {
-		this.model = Objects.requireNonNull(model);
+	public void setModel(List<VideoPart> model) {
+		Objects.requireNonNull(model);
+		this.model = new ArrayList<>(model);
 		this.viewer.setInput(this.model);
 		checkAll(true);
 	}
 
+	Consumer<IStatus> getStatusHandler() {
+		return this.statusHandler;
+	}
+
+	ChapterViewer statusHandler(Consumer<IStatus> newStatusHandler) {
+		setStatusHandler(newStatusHandler);
+		return this;
+	}
+
+	void setStatusHandler(Consumer<IStatus> statusHandler) {
+		this.statusHandler = Objects.requireNonNull(statusHandler);
+	}
+
+	public List<VideoPart> getSelectedChapters() {
+		return Arrays.stream(((IStructuredSelection) this.viewer.getSelection()).toArray()).map(p -> (VideoPart) p)
+				.collect(Collectors.toList());
+	}
+
+	public ChapterViewer selectedChapters(List<VideoPart> newSelectedChapters) {
+		setSelectedChapters(newSelectedChapters);
+		return this;
+	}
+
+	public void setSelectedChapters(List<VideoPart> selectedChapters) {
+		this.viewer.setSelection(new StructuredSelection(selectedChapters.toArray()));
+	}
+
+	/*
+	 * Specific implementatations only for this class.
+	 */
+
+	class TreeArrayContentProvider extends ArrayContentProvider implements ITreeContentProvider {
+
+		@Override
+		public Object[] getChildren(Object parentElement) {
+			return ((Section) parentElement).getParts();
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			final List<VideoPart> theModel = getModel();
+			if (theModel.contains(element)) {
+				return theModel;
+			}
+			for (final VideoPart part : theModel) {
+				if (part instanceof Section && ((Section) part).containsPart((VideoPart) element)) {
+					return part;
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			return element instanceof Section;
+		}
+
+	}
 }

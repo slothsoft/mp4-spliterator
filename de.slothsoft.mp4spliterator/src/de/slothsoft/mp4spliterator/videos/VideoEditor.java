@@ -25,7 +25,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
-import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 
 public class VideoEditor extends EditorPart {
 
@@ -114,6 +114,8 @@ public class VideoEditor extends EditorPart {
 		this.viewer = new ChapterViewer(parent, SWT.NONE);
 		this.viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		this.viewer.setModel(getEditorInput().getVideo().getChapters());
+
+		getSite().setSelectionProvider(this.viewer.viewer);
 	}
 
 	@Override
@@ -143,8 +145,12 @@ public class VideoEditor extends EditorPart {
 		return false;
 	}
 
-	public List<Chapter> getSelectedChapters() {
-		return this.viewer.getSelectedChapters();
+	public List<VideoPart> getCheckedChapters() {
+		return this.viewer.getCheckedChapters();
+	}
+
+	public void mergeSelectedChapters() {
+		this.viewer.mergeSelectedChapters();
 	}
 
 	/*
@@ -153,15 +159,15 @@ public class VideoEditor extends EditorPart {
 
 	static final class FunctionLabelProvider extends ColumnLabelProvider {
 
-		private final Function<Chapter, String> toStringFunction;
+		private final Function<VideoPart, String> toStringFunction;
 
-		public FunctionLabelProvider(Function<Chapter, String> toStringFunction) {
+		public FunctionLabelProvider(Function<VideoPart, String> toStringFunction) {
 			this.toStringFunction = toStringFunction;
 		}
 
 		@Override
 		public String getText(Object element) {
-			return this.toStringFunction.apply((Chapter) element);
+			return this.toStringFunction.apply((VideoPart) element);
 		}
 	}
 

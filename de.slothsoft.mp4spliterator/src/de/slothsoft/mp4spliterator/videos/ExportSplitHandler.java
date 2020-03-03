@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
-import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
@@ -26,7 +26,7 @@ public class ExportSplitHandler extends AbstractHandler {
 
 			final VideoEditor editor = (VideoEditor) HandlerUtil.getActiveEditor(event);
 			final File file = editor.getEditorInput().getFile();
-			final List<Chapter> selectedChapters = editor.getSelectedChapters();
+			final List<VideoPart> selectedChapters = editor.getCheckedChapters();
 			final File targetFolder = new File(targetFolderString);
 			try {
 				final VideoSplitter splitter = VideoSplitter.createInstance();

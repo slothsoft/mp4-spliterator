@@ -8,22 +8,22 @@ public class Video {
 
 	private String title;
 	private long length;
-	private List<Chapter> chapters = new ArrayList<>();
+	private List<VideoPart> chapters = new ArrayList<>();
 
 	public Video(String title) {
 		this.title = Objects.requireNonNull(title);
 	}
 
-	public List<Chapter> getChapters() {
+	public List<VideoPart> getChapters() {
 		return this.chapters;
 	}
 
-	public Video chapters(List<Chapter> newChapters) {
+	public Video chapters(List<VideoPart> newChapters) {
 		setChapters(newChapters);
 		return this;
 	}
 
-	public void setChapters(List<Chapter> chapters) {
+	public void setChapters(List<VideoPart> chapters) {
 		this.chapters = Objects.requireNonNull(chapters);
 	}
 

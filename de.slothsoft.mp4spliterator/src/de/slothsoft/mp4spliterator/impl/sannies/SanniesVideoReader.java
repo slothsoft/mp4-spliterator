@@ -20,6 +20,7 @@ import org.mp4parser.tools.IsoTypeReader;
 
 import de.slothsoft.mp4spliterator.core.Chapter;
 import de.slothsoft.mp4spliterator.core.Video;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.VideoReader;
 
 /**
@@ -97,7 +98,7 @@ public class SanniesVideoReader implements VideoReader {
 		// read bytes
 
 		final int count = IsoTypeReader.readUInt8(buffer);
-		final List<Chapter> chapters = new ArrayList<>(count);
+		final List<VideoPart> chapters = new ArrayList<>(count);
 
 		Chapter lastChapter = null;
 

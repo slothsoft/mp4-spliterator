@@ -67,6 +67,10 @@
             id="de.slothsoft.mp4spliterator.help"
             name="%command.help">
       </command>
+      <command
+            id="de.slothsoft.mp4spliterator.mergeChapters"
+            name="%command.mergeChapters">
+      </command>
    </extension>
    
    <extension
@@ -94,6 +98,10 @@
       <image
             commandId="de.slothsoft.mp4spliterator.help"
             icon="icons/help.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.mergeChapters"
+            icon="icons/merge-chapters.png">
       </image>
    </extension>
    
@@ -146,6 +154,30 @@
                         operator="and">
                      <instanceof
                            value="java.io.File">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="de.slothsoft.mp4spliterator.videos.MergeChaptersHandler"
+            commandId="de.slothsoft.mp4spliterator.mergeChapters">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePart">
+                  <instanceof
+                        value="de.slothsoft.mp4spliterator.videos.VideoEditor">
+                  </instanceof>
+               </with>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="de.slothsoft.mp4spliterator.core.VideoPart">
                      </instanceof>
                   </iterate>
                </with>
@@ -211,6 +243,14 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:de.slothsoft.mp4spliterator.chapterSection">
+         <command
+               commandId="de.slothsoft.mp4spliterator.mergeChapters"
+               style="push">
+         </command>
+         <separator
+               name="de.slothsoft.mp4spliterator.separator1"
+               visible="true">
+         </separator>
          <command
                commandId="de.slothsoft.mp4spliterator.exportSplit"
                style="push">
