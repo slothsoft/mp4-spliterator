@@ -153,6 +153,10 @@ public class VideoEditor extends EditorPart {
 		this.viewer.mergeSelectedChapters();
 	}
 
+	public void splitSelectedChapters() {
+		this.viewer.splitSelectedChapters();
+	}
+
 	/*
 	 * Specific implementations
 	 */

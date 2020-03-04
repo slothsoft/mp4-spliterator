@@ -197,19 +197,48 @@ public class ChapterViewer extends Composite {
 		return Status.OK_STATUS;
 	}
 
-	private List<VideoPart> getAllCheckedChapters() {
-		final List<VideoPart> result = new ArrayList<>(this.viewer.getTree().getItemCount());
-		collectAllCheckedChapters(result, this.viewer.getTree().getItems());
-		return result;
+	public void splitSelectedChapters() {
+		final List<VideoPart> selectedParts = getSelectedChapters();
+		final IStatus status = validateSplitChapters(selectedParts);
+		if (!status.isOK()) {
+			this.statusHandler.accept(status);
+			return;
+		}
+
+		if (!selectedParts.isEmpty()) {
+			final List<VideoPart> newModel = new ArrayList<>(this.model);
+			final List<VideoPart> splitParts = splitParts(selectedParts);
+			final int firstIndex = newModel.indexOf(selectedParts.get(0));
+			newModel.removeAll(selectedParts);
+			newModel.addAll(firstIndex, splitParts);
+
+			setModel(newModel);
+			this.viewer.setSelection(new StructuredSelection(splitParts));
+			check(splitParts, true);
+		}
 	}
 
-	private static void collectAllCheckedChapters(final List<VideoPart> result, TreeItem[] items) {
-		for (final TreeItem item : items) {
-			if (item.getChecked()) {
-				result.add((VideoPart) item.getData());
+	private static List<VideoPart> splitParts(final List<VideoPart> selectedParts) {
+		return selectedParts.stream().flatMap(p -> Arrays.stream(((Section) p).getParts()))
+				.collect(Collectors.toList());
+	}
+
+	IStatus validateSplitSelectedChapters() {
+		return validateSplitChapters(getSelectedChapters());
+	}
+
+	IStatus validateSplitChapters(List<VideoPart> selectedParts) {
+		selectedParts.sort(Comparator.comparing(this.model::indexOf));
+
+		for (final VideoPart selectedPart : selectedParts) {
+			if (!(selectedPart instanceof Section)) {
+				return new StatusBuilder(
+						MessageFormat.format(Messages.getString("ErrorNoSectionedChapters"), selectedPart.getTitle()))
+								.build();
 			}
-			collectAllCheckedChapters(result, item.getItems());
 		}
+
+		return Status.OK_STATUS;
 	}
 
 	void check(List<VideoPart> checkedParts, boolean checked) {

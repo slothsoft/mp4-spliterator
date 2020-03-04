@@ -18,6 +18,10 @@ h2 {
 	font-size: 12pt;
 	font-weight: bold;
 	line-height: 16pt;
+	margin-top: 20pt;
+	border-width: 1pt;
+	border-style: solid none solid none;
+	padding: 6pt 0 6pt 0;
 }
 
 a {
@@ -41,13 +45,13 @@ a:hover, a:active {
 }
 
 #link-list {
-	width: 180px;
+	width: 220px;
 	float: left;
 }
 
 #page-content {
 	position: absolute;
-	margin-left: 190px;
+	margin-left: 230px;
 	top: 0;
 	bottom: 0;
 	left: 0;
@@ -85,4 +89,20 @@ ul#flag-links {
 
 ul#flag-links li {
 	margin-bottom: 30px;
+}
+
+.button {
+	font-weight: bold;
+}
+
+.button img {
+	height: 20px;
+}
+
+.menu {
+	font-style: italic;
+}
+
+.menu img {
+	height: 20px;
 }

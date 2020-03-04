@@ -71,6 +71,10 @@
             id="de.slothsoft.mp4spliterator.mergeChapters"
             name="%command.mergeChapters">
       </command>
+      <command
+            id="de.slothsoft.mp4spliterator.splitChapters"
+            name="%command.splitChapters">
+      </command>
    </extension>
    
    <extension
@@ -102,6 +106,10 @@
       <image
             commandId="de.slothsoft.mp4spliterator.mergeChapters"
             icon="icons/merge-chapters.png">
+      </image>
+      <image
+            commandId="de.slothsoft.mp4spliterator.splitChapters"
+            icon="icons/split-chapters.png">
       </image>
    </extension>
    
@@ -184,6 +192,30 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="de.slothsoft.mp4spliterator.videos.SplitChaptersHandler"
+            commandId="de.slothsoft.mp4spliterator.splitChapters">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activePart">
+                  <instanceof
+                        value="de.slothsoft.mp4spliterator.videos.VideoEditor">
+                  </instanceof>
+               </with>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="de.slothsoft.mp4spliterator.core.VideoPart">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    
    <extension
@@ -245,6 +277,10 @@
             locationURI="toolbar:de.slothsoft.mp4spliterator.chapterSection">
          <command
                commandId="de.slothsoft.mp4spliterator.mergeChapters"
+               style="push">
+         </command>
+         <command
+               commandId="de.slothsoft.mp4spliterator.splitChapters"
                style="push">
          </command>
          <separator
