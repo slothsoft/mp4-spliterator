@@ -122,12 +122,6 @@ public class SanniesVideoReader implements VideoReader {
 		video.setChapters(chapters);
 	}
 
-	static long getInt(ByteBuffer buffer) {
-		final byte[] bytes = new byte[8];
-		buffer.get(bytes);
-		return ByteBuffer.wrap(bytes).getLong();
-	}
-
 	private static void readName(Video video, AppleNameBox nameBox) {
 		video.setTitle(nameBox.getValue());
 	}

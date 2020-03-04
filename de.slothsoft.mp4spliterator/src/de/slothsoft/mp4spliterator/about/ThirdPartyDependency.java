@@ -39,7 +39,7 @@ public class ThirdPartyDependency {
 		}
 	}
 
-	String displayName;
+	final String displayName;
 	String url;
 	String licenseUrl;
 
@@ -49,15 +49,6 @@ public class ThirdPartyDependency {
 
 	public String getDisplayName() {
 		return this.displayName;
-	}
-
-	public ThirdPartyDependency displayName(String newDisplayName) {
-		setDisplayName(newDisplayName);
-		return this;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = Objects.requireNonNull(displayName);
 	}
 
 	public String getLicenseUrl() {

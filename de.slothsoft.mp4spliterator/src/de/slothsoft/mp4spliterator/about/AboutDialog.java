@@ -59,7 +59,8 @@ import org.eclipse.ui.services.IServiceLocator;
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
 
 /**
- * Displays information about the product.
+ * Displays information about the product. Originally copied from
+ * {@link org.eclipse.ui.internal.dialogs.AboutDialog}
  */
 
 @SuppressWarnings("restriction")
@@ -68,7 +69,7 @@ public class AboutDialog extends TrayDialog {
 	private static final String COPY_BUILD_ID_COMMAND = "org.eclipse.ui.ide.copyBuildIdCommand"; //$NON-NLS-1$
 	private static final int MAX_IMAGE_WIDTH_FOR_TEXT = 250;
 
-	private String productName;
+	String productName;
 	private final IProduct product;
 	private final ArrayList<Image> images = new ArrayList<>();
 
@@ -396,8 +397,6 @@ public class AboutDialog extends TrayDialog {
 
 	/**
 	 * Create the context menu for the text widget.
-	 *
-	 * @since 3.4
 	 */
 	private void createTextMenu() {
 		final MenuManager textManager = new MenuManager();

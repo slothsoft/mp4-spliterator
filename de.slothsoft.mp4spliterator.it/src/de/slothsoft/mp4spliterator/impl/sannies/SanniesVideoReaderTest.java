@@ -6,8 +6,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.Video;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 
 public class SanniesVideoReaderTest {
 
@@ -49,6 +49,20 @@ public class SanniesVideoReaderTest {
 
 			Assert.assertNotNull(video);
 			Assert.assertEquals("unknown", video.getTitle());
+
+			final List<VideoPart> chapters = video.getChapters();
+			Assert.assertNotNull(chapters);
+			Assert.assertEquals(0, chapters.size());
+		}
+	}
+
+	@Test
+	public void testBunny() throws Exception {
+		try (InputStream input = getClass().getResourceAsStream("/files/bunny.mp4")) {
+			final Video video = this.reader.readVideo(input);
+
+			Assert.assertNotNull(video);
+			Assert.assertEquals("Track", video.getTitle());
 
 			final List<VideoPart> chapters = video.getChapters();
 			Assert.assertNotNull(chapters);

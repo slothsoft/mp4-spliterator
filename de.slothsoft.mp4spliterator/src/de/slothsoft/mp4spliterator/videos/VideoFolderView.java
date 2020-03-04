@@ -31,7 +31,7 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 	IWorkbench workbench;
 
 	private Set<String> supportedExtensions;
-	private TreeViewer viewer;
+	TreeViewer viewer;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -90,20 +90,35 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 		this.viewer.setSelection(selection);
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Class<T> adapter) {
+		if (adapter == TreeViewer.class) {
+			return (T) this.viewer;
+		}
+		return super.getAdapter(adapter);
+	}
+
 	/*
 	 * Specific implementations
 	 */
 
 	static final class FileTreeContentProvider implements ITreeContentProvider {
 
+		static Object[] EMPTY_ARRAY = new Object[0];
+
 		@Override
 		public Object[] getElements(Object inputElement) {
-			return ((File) inputElement).listFiles();
+			return getChildren(inputElement);
 		}
 
 		@Override
 		public Object[] getChildren(Object parentElement) {
-			return ((File) parentElement).listFiles();
+			final File[] children = ((File) parentElement).listFiles();
+			if (children == null) {
+				return EMPTY_ARRAY;
+			}
+			return children;
 		}
 
 		@Override
