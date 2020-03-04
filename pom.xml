@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.slothsoft.mp4spliterator</groupId>
 	<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
@@ -19,6 +21,7 @@
 	<properties>
 		<tycho.version>1.5.0</tycho.version>
 		<maven-scm-version>1.11.2</maven-scm-version>
+		<jacoco.version>0.8.3</jacoco.version>
 		<maven.build.timestamp.format>yyyyMMdd_HHmmss</maven.build.timestamp.format>
 	</properties>
 
@@ -38,6 +41,11 @@
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>3.0.0-M1</version>
 				</plugin>
@@ -52,8 +60,8 @@
 					<version>3.1.0</version>
 				</plugin>
 				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-scm-plugin</artifactId>
 					<version>${maven-scm-version}</version>
 				</plugin>
 
@@ -66,6 +74,12 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -80,7 +94,7 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-			
+
 			<!-- This is the place where the tycho-versions-plugin must update the 
 				MANIFEST/feature/product files to their respective pom versions -->
 
@@ -155,10 +169,91 @@
 					</environments>
 				</configuration>
 			</plugin>
+
+			<!-- Integrate Jacoco to monitor test coverage -->
+			<!-- https://intellectualcramps.wordpress.com/2012/03/22/jacoco-tycho-and-coverage-reports/ -->
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.ant</artifactId>
+						<version>${jacoco.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>ant-contrib</groupId>
+						<artifactId>ant-contrib</artifactId>
+						<version>20020829</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<target>
+						<property name="source-location" location="../" />
+						<taskdef name="jacoco-report"
+							classname="org.jacoco.ant.ReportTask"
+							classpathref="maven.plugin.classpath" />
+						<taskdef classpathref="maven.runtime.classpath"
+							resource="net/sf/antcontrib/antcontrib.properties" />
+						<available file="${project.basedir}/target/jacoco.exec"
+							property="jacoco.exec.file.exists" />
+						<echo message="${project.basedir}/target/jacoco.exec" />
+						<if>
+							<equals arg1="${jacoco.exec.file.exists}" arg2="true" />
+							<then>
+								<echo message="Executing jacoco report" />
+								<echo message="${source-location}" />
+								<trycatch>
+									<try>
+										<jacoco-report>
+											<executiondata>
+												<file file="${project.basedir}/target/jacoco.exec" />
+											</executiondata>
+
+											<structure name="mp4spliterator">
+												<classfiles>
+													<fileset
+														dir="${source-location}/de.slothsoft.mp4spliterator/target/classes" />
+												</classfiles>
+												<sourcefiles encoding="UTF-8">
+													<fileset
+														dir="${source-location}/de.slothsoft.mp4spliterator/src/" />
+												</sourcefiles>
+											</structure>
+											<html destdir="${project.basedir}/target/jacoco/report" />
+											<xml
+												destfile="${project.basedir}/target/jacoco/report/jacoco.xml" />
+										</jacoco-report>
+									</try>
+									<catch>
+										<echo>skipping</echo>
+									</catch>
+								</trycatch>
+							</then>
+							<else>
+								<echo message="No jacoco.exec file found." />
+							</else>
+						</if>
+					</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<scm>
 		<developerConnection>scm:git:https://github.com/slothsoft/mp4-spliterator.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 </project>
