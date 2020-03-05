@@ -6,8 +6,8 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
-import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.StringifyUtil;
+import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
@@ -33,7 +33,8 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 	}
 
 	@Override
-	public void splitIntoChapters(File input, File targetFolder, List<VideoPart> chapters) throws VideoSplitterException {
+	public void splitIntoChapters(File input, File targetFolder, List<VideoPart> chapters)
+			throws VideoSplitterException {
 		if (this.ffmpegFile == null) {
 			throw new VideoSplitterException(Messages.getString("FfmpegFileNotSet"));
 		}
@@ -71,7 +72,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 		return String.format("%0" + prefixLength + "d", Integer.valueOf(index + 1));
 	}
 
-	private static String getTargetFileName(File targetFolder, final VideoPart chapter, String prefix) {
+	static String getTargetFileName(File targetFolder, final VideoPart chapter, String prefix) {
 		return getTargetFileName(targetFolder, prefix + ' ' + sanitize(chapter.getTitle()));
 	}
 

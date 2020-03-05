@@ -14,7 +14,9 @@ import org.eclipse.ui.PlatformUI;
 
 public class Application implements IApplication {
 
-	public static final File FOLDER = new File(System.getProperty("user.dir"));
+	public static File getFolder() {
+		return new File(System.getProperty("user.dir"));
+	}
 
 	@Override
 	public Object start(IApplicationContext context) {

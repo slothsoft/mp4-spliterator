@@ -40,7 +40,7 @@ public class HelpEditor extends EditorPart {
 	}
 
 	private String fetchUrl() {
-		final File localHelpFolder = new File(Application.FOLDER, "docs");
+		final File localHelpFolder = new File(Application.getFolder(), "docs");
 		final File localHelp = new File(localHelpFolder, getEditorInput().getUrl());
 		if (localHelp.exists()) {
 			return localHelp.toURI().toString();

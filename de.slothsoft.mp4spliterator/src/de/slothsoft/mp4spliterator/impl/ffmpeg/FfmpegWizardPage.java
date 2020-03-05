@@ -35,8 +35,10 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 	static final String FFMPEG_URL = "https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.2.2-win64-static.zip";
 	private static final int BUFFER_SIZE = 4096;
 
-	private Text urlText;
-	private Text fileText;
+	Text urlText;
+	Text fileText;
+
+	private boolean downloadInFork = true;
 
 	public FfmpegWizardPage() {
 		super("FfmpegWizardPage");
@@ -88,21 +90,22 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 		return text;
 	}
 
-	private void download() {
+	void download() {
 		try {
 			final String url = this.urlText.getText();
-			getContainer().run(true, false, monitor -> {
+			final File[] result = {null};
+			getContainer().run(this.downloadInFork, false, monitor -> {
 				try {
 					monitor.beginTask(Messages.getString("Download") + '\u2026', IProgressMonitor.UNKNOWN);
-					downloadAsync(url);
+					result[0] = downloadAsync(url);
 					monitor.done();
 				} catch (final IOException e) {
 					throw new InvocationTargetException(e);
 				}
 			});
 
-			final File ffmpegFile = new File(Application.FOLDER, FfmpegWizardPage.FFMPEG_PATH);
-			if (ffmpegFile.exists()) {
+			final File ffmpegFile = result[0];
+			if (ffmpegFile != null && ffmpegFile.exists()) {
 				this.fileText.setText(FFMPEG_PATH);
 				updatePageComplete();
 			}
@@ -114,12 +117,12 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 		}
 	}
 
-	private static void downloadAsync(String urlString) throws IOException {
-		final File ffmpegFile = new File(Application.FOLDER, FfmpegWizardPage.FFMPEG_PATH);
+	static File downloadAsync(String urlString) throws IOException {
+		final File ffmpegFile = new File(Application.getFolder(), FfmpegWizardPage.FFMPEG_PATH);
 		ffmpegFile.getParentFile().mkdirs();
 
 		final URL url = new URL(urlString);
-		final String ffmpegFileName = '/' + ffmpegFile.getName();
+		final String ffmpegFileName = ffmpegFile.getName();
 
 		try (final ZipInputStream zipIn = new ZipInputStream(url.openStream())) {
 			ZipEntry entry = zipIn.getNextEntry();
@@ -127,22 +130,26 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 			while (entry != null) {
 				if (!entry.isDirectory() && entry.getName().endsWith(ffmpegFileName)) {
 					// if the entry is THE file, extracts it
-					extractFile(zipIn, ffmpegFile);
-					break;
+					final File result = extractFile(zipIn, ffmpegFile);
+					zipIn.closeEntry();
+					return result;
 				}
 				zipIn.closeEntry();
 				entry = zipIn.getNextEntry();
 			}
 		}
+		return null;
 	}
 
-	private static void extractFile(ZipInputStream zipIn, File ffmpegFile) throws IOException {
+	private static File extractFile(ZipInputStream zipIn, File ffmpegFile) throws IOException {
 		try (final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(ffmpegFile))) {
 			final byte[] bytesIn = new byte[BUFFER_SIZE];
 			int read = 0;
 			while ((read = zipIn.read(bytesIn)) != -1) {
 				outputStream.write(bytesIn, 0, read);
 			}
+			outputStream.flush();
+			return ffmpegFile;
 		}
 	}
 
@@ -156,7 +163,7 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 		}
 	}
 
-	private void updatePageComplete() {
+	void updatePageComplete() {
 		String errorMessage = null;
 
 		if (this.fileText.getText().isEmpty()) {
@@ -173,6 +180,19 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 		final IPreferenceStore preferences = Mp4SpliteratorPlugin.getDefault().getPreferenceStore();
 		preferences.setValue(FfmpegPreferencePage.FFMPEG_PATH_DEFAULT, file);
 		preferences.setDefault(FfmpegPreferencePage.FFMPEG_PATH, file);
+	}
+
+	public boolean isDownloadInFork() {
+		return this.downloadInFork;
+	}
+
+	public FfmpegWizardPage downloadInFork(boolean newDownloadInFork) {
+		setDownloadInFork(newDownloadInFork);
+		return this;
+	}
+
+	public void setDownloadInFork(boolean downloadInFork) {
+		this.downloadInFork = downloadInFork;
 	}
 
 }

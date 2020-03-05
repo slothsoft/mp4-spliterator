@@ -21,7 +21,7 @@ public class InitWizard extends Wizard {
 		}
 	}
 
-	private final List<InitWizardPage> wizardPages = new ArrayList<>();
+	final List<InitWizardPage> wizardPages = new ArrayList<>();
 
 	public InitWizard() {
 		InitService.doToAllServices(service -> {

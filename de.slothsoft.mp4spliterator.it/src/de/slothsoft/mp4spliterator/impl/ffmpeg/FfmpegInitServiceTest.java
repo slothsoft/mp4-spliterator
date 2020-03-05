@@ -23,8 +23,9 @@ public class FfmpegInitServiceTest {
 		this.applicationFolder = Files.createTempDirectory("app-").toFile();
 		this.applicationFolder.mkdirs();
 
+		System.setProperty("user.dir", this.applicationFolder.getAbsolutePath());
+
 		this.service = new FfmpegInitService();
-		this.service.applicationFolder = this.applicationFolder;
 
 		this.preferences = Mp4SpliteratorPlugin.getDefault().getPreferenceStore();
 		this.preferences.setToDefault(FfmpegPreferencePage.FFMPEG_PATH);
@@ -59,7 +60,7 @@ public class FfmpegInitServiceTest {
 
 	@Test
 	public void testFileExists() throws Exception {
-		final File ffmpegFile = new File(this.service.applicationFolder, FfmpegWizardPage.FFMPEG_PATH);
+		final File ffmpegFile = new File(this.applicationFolder, FfmpegWizardPage.FFMPEG_PATH);
 		ffmpegFile.getParentFile().mkdirs();
 		Files.write(ffmpegFile.toPath(), "".getBytes());
 
@@ -77,7 +78,7 @@ public class FfmpegInitServiceTest {
 
 	@Test
 	public void testDefaultAndFileExists() throws Exception {
-		final File ffmpegFile = new File(this.service.applicationFolder, FfmpegWizardPage.FFMPEG_PATH);
+		final File ffmpegFile = new File(this.applicationFolder, FfmpegWizardPage.FFMPEG_PATH);
 		ffmpegFile.getParentFile().mkdirs();
 		Files.write(ffmpegFile.toPath(), "".getBytes());
 
