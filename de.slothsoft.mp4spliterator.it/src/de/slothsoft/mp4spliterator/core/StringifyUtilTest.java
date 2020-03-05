@@ -13,5 +13,6 @@ public class StringifyUtilTest {
 	@Test
 	public void testStringifyTimeWithMiliSeconds() throws Exception {
 		Assert.assertEquals("01:23.456", StringifyUtil.stringifyTimeWithMiliSeconds((1 * 60 + 23) * 1000 + 456));
+		Assert.assertEquals("00:05.678", StringifyUtil.stringifyTimeWithMiliSeconds(5678));
 	}
 }
