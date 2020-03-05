@@ -90,7 +90,7 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 		return text;
 	}
 
-	void download() {
+	File download() {
 		try {
 			final String url = this.urlText.getText();
 			final File[] result = {null};
@@ -109,11 +109,14 @@ public class FfmpegWizardPage extends WizardPage implements InitWizardPage {
 				this.fileText.setText(FFMPEG_PATH);
 				updatePageComplete();
 			}
+			return ffmpegFile;
 		} catch (final InvocationTargetException e) {
 			new StatusBuilder(Messages.getString("CouldNotDownload")).exception((Exception) e.getTargetException())
 					.show();
+			return null;
 		} catch (final InterruptedException e) {
 			// nothing to do?
+			return null;
 		}
 	}
 

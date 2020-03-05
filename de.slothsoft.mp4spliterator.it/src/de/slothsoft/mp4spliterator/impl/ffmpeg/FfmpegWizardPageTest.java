@@ -83,12 +83,7 @@ public class FfmpegWizardPageTest {
 		this.wizardPage.setDownloadInFork(false);
 		this.wizardPage.urlText.setText(URL_HELLO_WORLD);
 
-		this.wizardPage.download();
-
-		final String ffmpegFileString = this.wizardPage.fileText.getText();
-		Assert.assertFalse(ffmpegFileString.isEmpty());
-
-		final File ffmpegFile = new File(ffmpegFileString);
+		final File ffmpegFile = this.wizardPage.download();
 		Assert.assertTrue("File should exist: " + ffmpegFile, ffmpegFile.exists());
 		Assert.assertEquals(Arrays.asList("correct"), Files.readAllLines(ffmpegFile.toPath()));
 	}

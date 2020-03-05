@@ -24,12 +24,16 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 	// these are forbidden in windows at last
 	private static final String FILE_SYSTEM_FORBIDDEN_LETTERS = "\\\\\\/:\\*?\\\"<>|";
 
-	private final File ffmpegFile;
+	final File ffmpegFile;
 
 	public FfmpegVideoSplitter() {
 		final String ffmpegFileString = Mp4SpliteratorPlugin.getDefault().getPreferenceStore()
 				.getString(FfmpegPreferencePage.FFMPEG_PATH);
 		this.ffmpegFile = ffmpegFileString.isEmpty() ? null : new File(ffmpegFileString);
+	}
+
+	FfmpegVideoSplitter(File ffmpegFile) {
+		this.ffmpegFile = ffmpegFile;
 	}
 
 	@Override
@@ -56,12 +60,14 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 			sb.append(" -c ").append("copy ").append('\"').append(getTargetFileName(targetFolder, chapter, prefix))
 					.append('\"');
 
+			System.out.println(sb.toString());
+
 			try {
 				final ProcessBuilder pb = new ProcessBuilder(sb.toString());
 				pb.redirectOutput(Redirect.INHERIT);
 				pb.redirectError(Redirect.INHERIT);
-				pb.start();
-			} catch (final IOException e) {
+				pb.start().waitFor();
+			} catch (final IOException | InterruptedException e) {
 				throw new VideoSplitterException(Messages.getString("FfmpegError") + '\n' + sb.toString(), e);
 			}
 			index++;
