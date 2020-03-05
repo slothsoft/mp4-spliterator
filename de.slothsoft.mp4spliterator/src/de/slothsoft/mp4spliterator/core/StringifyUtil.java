@@ -16,6 +16,11 @@ public final class StringifyUtil {
 		return String.format("%02d:%02d", Long.valueOf(minutes), Long.valueOf(seconds));
 	}
 
+	public static String stringifyTimeWithMiliSeconds(long time) {
+		final long miliSeconds = time % 1000;
+		return stringifyTime(time) + String.format(".%03d", Long.valueOf(miliSeconds));
+	}
+
 	private StringifyUtil() {
 		// hide me
 	}

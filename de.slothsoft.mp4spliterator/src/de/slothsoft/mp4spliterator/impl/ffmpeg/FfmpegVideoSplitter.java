@@ -44,8 +44,9 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 		int index = 0;
 
 		for (final VideoPart chapter : chapters) {
-			final String startTime = StringifyUtil.stringifyTime(chapter.getStartTime());
-			final String endTime = StringifyUtil.stringifyTime(chapter.getEndTime() - chapter.getStartTime() + 1000);
+			final String startTime = StringifyUtil.stringifyTimeWithMiliSeconds(chapter.getStartTime());
+			final String endTime = StringifyUtil
+					.stringifyTimeWithMiliSeconds(chapter.getEndTime() - chapter.getStartTime() + 1000);
 			final String prefix = getPrefix(index, entireSize);
 
 			sb.setLength(0);
