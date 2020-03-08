@@ -28,17 +28,19 @@ An application for splitting MP4 files into chapters:
 
 ## Getting Started
 
-### Prerequisites
+<h3>Prerequisites</h3>
 
-You need at least an installed **Java 8** or above to run the code. You can download it from [java.com](https://www.java.com/download/).
+<p>You need at least an installed <b>Java 8</b> or above to run the code. You can download it from 
+<a href="https://www.java.com/download/">java.com</a>.
 
 
+<h3>Installing</h3>
 
-### Installing
+<p>Just download the last release and extract it in a folder of your choice, then double click the EXE file.</p>
 
-Just download the last release and extract it in a folder of your choice, then double click the EXE file.
-
-One of the first things the application does is to download (ffmpeg)[https://ffmpeg.org/]. You can speed up this progress by downloading it yourself and entering the location of the downloaded file in the init wizard.
+<p>One of the first things the application does is to download <a href="https://ffmpeg.org/">ffmpeg</a>. You 
+can speed up this progress by downloading it yourself and entering the location of the downloaded file in 
+the init wizard.</p>	
 
 
 
