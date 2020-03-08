@@ -38,6 +38,8 @@ You need at least an installed **Java 8** or above to run the code. You can down
 
 Just download the last release and extract it in a folder of your choice, then double click the EXE file.
 
+One of the first things the application does is to download (ffmpeg)[https://ffmpeg.org/]. You can speed up this progress by downloading it yourself and entering the location of the downloaded file in the init wizard.
+
 
 
 ### Using the Application
