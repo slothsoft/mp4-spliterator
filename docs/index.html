@@ -16,6 +16,7 @@
 				<li><a href="#getting-started"><b>Getting Started</b></a></li>
 				<li><a href="#mp4-chapter"><b>MP4 -> Chapter</b></a></li>
 				<li><a href="#split-merge"><b>Merge and Split</b></a></li>
+				<li><a href="#preferenes"><b>Preferences</b></a></li>
 			</ul>
 		</div>
 		<div id="page-content">
@@ -72,6 +73,26 @@
 
 			<p><b>Note:</b> To select multiple videos at once use <b>Shift</b> (contiguous selection) or <b>CTRL</b> (selection of separate elements).</p> 
 			
+
+			
+			<h2 id="preferenes">Preferences</h2>
+			
+			<p>You can customize the chapter export via <span class="menu">Window → Preferences</span>.</p>
+			
+			<p><img src="resources/images/screenshot_preferences.png" /></p>
+			
+			<p>The following settings can be changed:</p>
+			
+			<ul>
+				<li><b>File pattern</b> - the pattern for the exported chapter files; uses the following place holders
+					<ul>
+						<li><i>{number}</i> - a running number in the order of the chapters</li>
+						<li><i>{chapterTitle}</i> - the title of the chapter</li>
+					</ul>
+				</li>
+				<li><b>Shift of start time</b> - if not zero, this value changes the start time of a chapter; i.e. a value of -500 means the chapter is split 500ms before the chapter's actual start time</li>
+				<li><b>Shift of end time</b> - if not zero, this value changes the end time of a chapter; i.e. a value of 700 means the chapter is split 700ms after the chapter's actual end time</li>
+			</ul>
 		</div>
 	</div>
 </body>
