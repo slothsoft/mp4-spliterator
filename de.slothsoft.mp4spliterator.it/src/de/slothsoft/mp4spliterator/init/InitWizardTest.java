@@ -1,8 +1,5 @@
 package de.slothsoft.mp4spliterator.init;
 
-import java.util.UUID;
-
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
@@ -10,9 +7,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
-import de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegPreferencePage;
 
 public class InitWizardTest {
 
@@ -25,17 +19,7 @@ public class InitWizardTest {
 		this.shell = new Shell();
 		this.shell.setLayout(new FillLayout());
 
-		initInitServices();
-
 		this.wizard = new InitWizard();
-	}
-
-	private static void initInitServices() {
-		// FfmpegInitService
-		final IPreferenceStore preferences = Mp4SpliteratorPlugin.getDefault().getPreferenceStore();
-		final String ffmpegFile = UUID.randomUUID().toString() + ".exe";
-		preferences.setValue(FfmpegPreferencePage.FFMPEG_PATH_DEFAULT, ffmpegFile);
-		preferences.setDefault(FfmpegPreferencePage.FFMPEG_PATH, ffmpegFile);
 	}
 
 	@After
