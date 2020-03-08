@@ -19,7 +19,7 @@ public class VideoSplit {
 
 	private File sourceFile;
 	private File targetFolder;
-	private long videoLength = Long.MAX_VALUE;
+	private long videoLength = Long.MAX_VALUE; // TODO: I think this is stupid
 	private List<VideoPart> chapters = new ArrayList<>();
 	private VideoSplitterConfig config = new VideoSplitterConfig();
 	private IProgressMonitor progressMonitor = new NullProgressMonitor();

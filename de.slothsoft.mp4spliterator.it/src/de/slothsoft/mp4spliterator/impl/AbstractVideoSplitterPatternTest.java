@@ -67,7 +67,7 @@ public abstract class AbstractVideoSplitterPatternTest {
 	}
 
 	private void splitIntoChapters(VideoSplitterConfig config, final Chapter... chapters)
-			throws VideoSplitterException {
+			throws VideoSplitterException, InterruptedException {
 		this.splitter.splitIntoChapters(
 				new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}

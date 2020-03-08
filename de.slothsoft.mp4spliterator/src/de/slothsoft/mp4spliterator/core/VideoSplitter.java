@@ -8,5 +8,5 @@ public interface VideoSplitter {
 		return new FfmpegVideoSplitter();
 	}
 
-	void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException;
+	void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException, InterruptedException;
 }

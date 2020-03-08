@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.core.StringifyUtil;
 import de.slothsoft.mp4spliterator.core.VideoPart;
@@ -39,7 +41,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 	}
 
 	@Override
-	public void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException {
+	public void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException, InterruptedException {
 		if (this.ffmpegFile == null) {
 			throw new VideoSplitterException(Messages.getString("FfmpegFileNotSet"));
 		}
@@ -52,6 +54,9 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 		final StringBuilder sb = new StringBuilder();
 		final int entireSize = chapters.size();
 		int index = 0;
+		final IProgressMonitor monitor = videoSplit.getProgressMonitor();
+		monitor.beginTask(Messages.getString("ExportSplit"), entireSize);
+		final String entireSizeString = getPrefix(entireSize - 1, entireSize);
 
 		for (final VideoPart chapter : chapters) {
 			final long startTimeLong = Math.max(chapter.getStartTime() + config.getStartTimeShift(), 0);
@@ -59,6 +64,8 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 			final long endTimeLong = Math.min(videoLength, chapter.getEndTime() + config.getEndTimeShift());
 			final String endTime = StringifyUtil.stringifyTimeWithMiliSeconds(endTimeLong - startTimeLong);
 			final String prefix = getPrefix(index, entireSize);
+
+			monitor.subTask(chapter.getTitle() + " (" + prefix + '/' + entireSizeString + ')');
 
 			sb.setLength(0);
 			sb.append('\"').append(this.ffmpegFile).append('\"');
@@ -76,7 +83,13 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 				throw new VideoSplitterException(Messages.getString("FfmpegError") + '\n' + sb.toString(), e);
 			}
 			index++;
+
+			monitor.worked(1);
+			if (monitor.isCanceled()) {
+				throw new InterruptedException("Splitting was cancelled.");
+			}
 		}
+		monitor.done();
 	}
 
 	static String getPrefix(int index, int entireSize) {

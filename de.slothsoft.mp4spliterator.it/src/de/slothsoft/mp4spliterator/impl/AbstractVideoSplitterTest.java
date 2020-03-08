@@ -44,7 +44,7 @@ public abstract class AbstractVideoSplitterTest {
 		Assert.assertEquals(Arrays.asList("00:01.234 - 00:04.444"), lines);
 	}
 
-	private void splitIntoChapters(final Chapter... chapters) throws VideoSplitterException {
+	private void splitIntoChapters(final Chapter... chapters) throws VideoSplitterException, InterruptedException {
 		this.splitter.splitIntoChapters(new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)));
 	}
 
@@ -87,7 +87,7 @@ public abstract class AbstractVideoSplitterTest {
 	}
 
 	private void splitIntoChapters(VideoSplitterConfig config, final Chapter... chapters)
-			throws VideoSplitterException {
+			throws VideoSplitterException, InterruptedException {
 		this.splitter.splitIntoChapters(
 				new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}
