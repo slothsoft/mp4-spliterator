@@ -330,6 +330,11 @@
             id="de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegPreferencePage"
             name="%preferencePage.ffmpeg">
       </page>
+      <page
+            class="de.slothsoft.mp4spliterator.videos.VideoSplitterPreferencePage"
+            id="de.slothsoft.mp4spliterator.videos.VideoSplitterPreferencePage"
+            name="%preferencePage.videoSplitter">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.startup">

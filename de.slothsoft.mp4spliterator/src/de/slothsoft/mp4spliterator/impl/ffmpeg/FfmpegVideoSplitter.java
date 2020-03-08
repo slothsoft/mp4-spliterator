@@ -8,7 +8,9 @@ import java.util.List;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.core.StringifyUtil;
 import de.slothsoft.mp4spliterator.core.VideoPart;
+import de.slothsoft.mp4spliterator.core.VideoSplit;
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
+import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
 /**
@@ -37,28 +39,33 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 	}
 
 	@Override
-	public void splitIntoChapters(File input, File targetFolder, List<VideoPart> chapters)
-			throws VideoSplitterException {
+	public void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException {
 		if (this.ffmpegFile == null) {
 			throw new VideoSplitterException(Messages.getString("FfmpegFileNotSet"));
 		}
+		final File input = videoSplit.getSourceFile();
+		final File targetFolder = videoSplit.getTargetFolder();
+		final VideoSplitterConfig config = videoSplit.getConfig();
+		final long videoLength = videoSplit.getVideoLength();
+		final List<VideoPart> chapters = videoSplit.getChapters();
 
 		final StringBuilder sb = new StringBuilder();
 		final int entireSize = chapters.size();
 		int index = 0;
 
 		for (final VideoPart chapter : chapters) {
-			final String startTime = StringifyUtil.stringifyTimeWithMiliSeconds(chapter.getStartTime());
-			final String endTime = StringifyUtil
-					.stringifyTimeWithMiliSeconds(chapter.getEndTime() - chapter.getStartTime() + 1000);
+			final long startTimeLong = Math.max(chapter.getStartTime() + config.getStartTimeShift(), 0);
+			final String startTime = StringifyUtil.stringifyTimeWithMiliSeconds(startTimeLong);
+			final long endTimeLong = Math.min(videoLength, chapter.getEndTime() + config.getEndTimeShift());
+			final String endTime = StringifyUtil.stringifyTimeWithMiliSeconds(endTimeLong - startTimeLong);
 			final String prefix = getPrefix(index, entireSize);
 
 			sb.setLength(0);
 			sb.append('\"').append(this.ffmpegFile).append('\"');
 			sb.append(" -i ").append('\"').append(input).append('\"');
 			sb.append(" -ss ").append(startTime).append(" -t ").append(endTime);
-			sb.append(" -c ").append("copy ").append('\"').append(getTargetFileName(targetFolder, chapter, prefix))
-					.append('\"');
+			sb.append(" -c ").append("copy ");
+			sb.append('\"').append(getTargetFileName(targetFolder, chapter, prefix, config)).append('\"');
 
 			try {
 				final ProcessBuilder pb = new ProcessBuilder(sb.toString());
@@ -77,8 +84,12 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 		return String.format("%0" + prefixLength + "d", Integer.valueOf(index + 1));
 	}
 
-	static String getTargetFileName(File targetFolder, final VideoPart chapter, String prefix) {
-		return getTargetFileName(targetFolder, prefix + ' ' + sanitize(chapter.getTitle()));
+	static String getTargetFileName(File targetFolder, final VideoPart chapter, String runningNumber,
+			VideoSplitterConfig config) {
+		String fileName = config.getPattern();
+		fileName = fileName.replace(VideoSplitterConfig.PATTERN_RUNNING_NUMBER, runningNumber);
+		fileName = fileName.replace(VideoSplitterConfig.PATTERN_CHAPTER_TITLE, sanitize(chapter.getTitle()));
+		return getTargetFileName(targetFolder, fileName);
 	}
 
 	static String getTargetFileName(File targetFolder, String fileName) {

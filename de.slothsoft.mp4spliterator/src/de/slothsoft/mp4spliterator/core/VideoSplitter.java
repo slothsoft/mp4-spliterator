@@ -1,8 +1,5 @@
 package de.slothsoft.mp4spliterator.core;
 
-import java.io.File;
-import java.util.List;
-
 import de.slothsoft.mp4spliterator.impl.ffmpeg.FfmpegVideoSplitter;
 
 public interface VideoSplitter {
@@ -11,5 +8,5 @@ public interface VideoSplitter {
 		return new FfmpegVideoSplitter();
 	}
 
-	void splitIntoChapters(File input, File targetFolder, List<VideoPart> chapters) throws VideoSplitterException;
+	void splitIntoChapters(VideoSplit videoSplit) throws VideoSplitterException;
 }

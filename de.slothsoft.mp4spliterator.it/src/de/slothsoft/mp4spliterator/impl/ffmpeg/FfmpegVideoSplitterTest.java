@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
 
 public class FfmpegVideoSplitterTest {
 
@@ -33,8 +34,8 @@ public class FfmpegVideoSplitterTest {
 	@Test
 	public void testGetTargetFileNameWithPart() throws Exception {
 		final String fileName = UUID.randomUUID().toString();
-		Assert.assertEquals(this.targetFolder + "\\pre " + fileName + ".mp4",
-				FfmpegVideoSplitter.getTargetFileName(this.targetFolder, new Chapter(fileName), "pre"));
+		Assert.assertEquals(this.targetFolder + "\\pre " + fileName + ".mp4", FfmpegVideoSplitter
+				.getTargetFileName(this.targetFolder, new Chapter(fileName), "pre", new VideoSplitterConfig()));
 	}
 
 	@Test
