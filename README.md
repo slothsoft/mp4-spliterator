@@ -18,6 +18,7 @@ An application for splitting MP4 files into chapters:
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [Versions](#versions)
+- [Developer Guide](#developer-guide)
 - [Third Party Libraries](#third-party-libraries)
     - [Icons](#icons)
     - [MP4](#mp4)
@@ -36,6 +37,8 @@ You need at least an installed **Java 8** or above to run the code. You can down
 ### Installing
 
 Just download the last release and extract it in a folder of your choice, then double click the EXE file.
+
+One of the first things the application does is to download (ffmpeg)[https://ffmpeg.org/]. You can speed up this progress by downloading it yourself and entering the location of the downloaded file in the init wizard.
 
 
 
@@ -70,6 +73,26 @@ If something is missing, request it via [a new issue](https://github.com/slothso
 | Future | [Issues](https://github.com/slothsoft/mp4-spliterator/issues) | | |
 | 1.1.0 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/2?closed=1) | Chapter merging | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.1.0)
 | 1.0.0 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/1?closed=1) | First prototype | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.0.0)
+
+
+
+## Developer Guide
+
+To start this project in your Eclipse, do:
+
+1. Clone this repository
+1. Call `mvn install -Pstart` on _maven-p2/pom.xml_ (_Start P2 Repo.launch_) to start a P2 repository locally
+1. To start the application from **Eclipse** do the following:
+    1. Open the file _platform.target_ and click on _"Set as Active Target Platform"_
+    1. _de.slothsoft.mp4spliterator.product/Mp4SpliteratorApp.product_ and click on _"1. Synchronize"_ and then _"2. Launch Eclipse Application"_
+1. To build the application with **Tycho** 
+     - Run `mvn clean install` on the repository root
+     - Or in Eclipse right click on the _pom.xml_ and use _"Run as..."_ → _"Maven install"_
+     - The resulting EXE file is in _de.slothsoft.mp4spliterator.product/target/products/de.slothsoft.mp4spliterator.product-&lt;time>-&lt;os>.zip_ and / or the folder next to the ZIP file
+1. when finished, call `mvn package -Pstop` to stop the P2 repository
+
+
+**Note:** This project is a copy of the template [example-eclipse-application](https://github.com/slothsoft/example-eclipse-application). So if you need more information or if you like this setup, check it out!
 
 
 
