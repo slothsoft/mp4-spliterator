@@ -96,6 +96,8 @@ To start this project in your Eclipse, do:
 
 **Note:** This project is a copy of the template [example-eclipse-application](https://github.com/slothsoft/example-eclipse-application). So if you need more information or if you like this setup, check it out!
 
+*(More information can be found in the  [developer guide](https://github.com/slothsoft/mp4-spliterator/wiki).)*
+
 
 
 ## Third Party Libraries
