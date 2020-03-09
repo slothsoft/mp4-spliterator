@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.slothsoft.mp4spliterator.core.Chapter;
+import de.slothsoft.mp4spliterator.core.Section;
 import de.slothsoft.mp4spliterator.core.VideoPart;
 
 public class ChapterViewerTest {
@@ -125,6 +126,38 @@ public class ChapterViewerTest {
 		for (final TreeItem item : this.chapterViewer.viewer.getTree().getItems()) {
 			Assert.assertFalse(item.getChecked());
 		}
+	}
+
+	@Test
+	public void testCheckAllRecursiveTrue() throws Exception {
+		final VideoPart chapter1 = new Section(new Chapter(UUID.randomUUID().toString()));
+		final VideoPart chapter2 = new Chapter(UUID.randomUUID().toString());
+		final VideoPart chapter3 = new Chapter(UUID.randomUUID().toString());
+		this.chapterViewer.setModel(Arrays.asList(chapter1, chapter2, chapter3));
+		this.chapterViewer.viewer.expandAll();
+		this.chapterViewer.checkAll(true);
+
+		assertChecked(this.chapterViewer.viewer.getTree().getItems(), true);
+	}
+
+	@SuppressWarnings("boxing")
+	private void assertChecked(TreeItem[] items, boolean checked) {
+		for (final TreeItem item : items) {
+			Assert.assertEquals(item.getText() + " has the wrong checked state.", checked, item.getChecked());
+			assertChecked(item.getItems(), checked);
+		}
+	}
+
+	@Test
+	public void testCheckAllRecursiveFalse() throws Exception {
+		final VideoPart chapter1 = new Section(new Chapter(UUID.randomUUID().toString()));
+		final VideoPart chapter2 = new Chapter(UUID.randomUUID().toString());
+		final VideoPart chapter3 = new Chapter(UUID.randomUUID().toString());
+		this.chapterViewer.setModel(Arrays.asList(chapter1, chapter2, chapter3));
+		this.chapterViewer.viewer.expandAll();
+		this.chapterViewer.checkAll(false);
+
+		assertChecked(this.chapterViewer.viewer.getTree().getItems(), false);
 	}
 
 	@Test

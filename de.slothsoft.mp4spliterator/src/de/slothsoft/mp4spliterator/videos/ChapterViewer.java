@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -63,6 +64,7 @@ public class ChapterViewer extends Composite {
 		this.viewer = new TreeViewer(table);
 		this.viewer.setContentProvider(new TreeArrayContentProvider());
 		this.viewer.setLabelProvider(new LabelProvider());
+		this.viewer.getTree().addListener(SWT.Selection, this::performCheckIfNecessary);
 
 		final TreeViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("Title"));
 		titleColumn.setLabelProvider(new FunctionLabelProvider(VideoPart::getTitle));
@@ -87,6 +89,28 @@ public class ChapterViewer extends Composite {
 		createButton(this.toolkit, buttonComposite, Messages.getString("CheckNone"), () -> checkAll(false));
 	}
 
+	private void performCheckIfNecessary(Event event) {
+		if ((event.detail & SWT.CHECK) == SWT.CHECK) {
+			performCheck((TreeItem) event.item);
+		}
+	}
+
+	void performCheck(TreeItem treeItem) {
+		final boolean checked = treeItem.getChecked();
+
+		for (final TreeItem child : treeItem.getItems()) {
+			child.setChecked(checked);
+		}
+
+		final TreeItem parentItem = treeItem.getParentItem();
+		if (parentItem != null) {
+			parentItem.setChecked(checked);
+			for (final TreeItem sibling : parentItem.getItems()) {
+				sibling.setChecked(checked);
+			}
+		}
+	}
+
 	private static TreeViewerColumn createColumn(TreeViewer tableViewer, String columnTitle) {
 		final TreeViewerColumn result = new TreeViewerColumn(tableViewer, SWT.NONE);
 
@@ -96,8 +120,13 @@ public class ChapterViewer extends Composite {
 	}
 
 	void checkAll(boolean checked) {
-		for (final TreeItem tableItem : this.viewer.getTree().getItems()) {
+		checkItems(this.viewer.getTree().getItems(), checked);
+	}
+
+	private void checkItems(TreeItem[] items, boolean checked) {
+		for (final TreeItem tableItem : items) {
 			tableItem.setChecked(checked);
+			checkItems(tableItem.getItems(), checked);
 		}
 	}
 
