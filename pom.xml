@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.slothsoft.mp4spliterator</groupId>
 	<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -203,13 +201,9 @@
 				<configuration>
 					<target>
 						<property name="source-location" location="../" />
-						<taskdef name="jacoco-report"
-							classname="org.jacoco.ant.ReportTask"
-							classpathref="maven.plugin.classpath" />
-						<taskdef classpathref="maven.runtime.classpath"
-							resource="net/sf/antcontrib/antcontrib.properties" />
-						<available file="${project.basedir}/target/jacoco.exec"
-							property="jacoco.exec.file.exists" />
+						<taskdef name="jacoco-report" classname="org.jacoco.ant.ReportTask" classpathref="maven.plugin.classpath" />
+						<taskdef classpathref="maven.runtime.classpath" resource="net/sf/antcontrib/antcontrib.properties" />
+						<available file="${project.basedir}/target/jacoco.exec" property="jacoco.exec.file.exists" />
 						<echo message="${project.basedir}/target/jacoco.exec" />
 						<if>
 							<equals arg1="${jacoco.exec.file.exists}" arg2="true" />
@@ -225,17 +219,14 @@
 
 											<structure name="mp4spliterator">
 												<classfiles>
-													<fileset
-														dir="${source-location}/de.slothsoft.mp4spliterator/target/classes" />
+													<fileset dir="${source-location}/de.slothsoft.mp4spliterator/target/classes" />
 												</classfiles>
 												<sourcefiles encoding="UTF-8">
-													<fileset
-														dir="${source-location}/de.slothsoft.mp4spliterator/src/" />
+													<fileset dir="${source-location}/de.slothsoft.mp4spliterator/src/" />
 												</sourcefiles>
 											</structure>
 											<html destdir="${project.basedir}/target/jacoco/report" />
-											<xml
-												destfile="${project.basedir}/target/jacoco/report/jacoco.xml" />
+											<xml destfile="${project.basedir}/target/jacoco/report/jacoco.xml" />
 										</jacoco-report>
 									</try>
 									<catch>
@@ -254,6 +245,6 @@
 	</build>
 	<scm>
 		<developerConnection>scm:git:https://github.com/slothsoft/mp4-spliterator.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>1.1.0</tag>
 	</scm>
 </project>
