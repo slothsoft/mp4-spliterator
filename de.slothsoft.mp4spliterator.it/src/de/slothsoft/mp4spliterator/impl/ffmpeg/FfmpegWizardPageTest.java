@@ -17,11 +17,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.slothsoft.mp4spliterator.Application;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 
 public class FfmpegWizardPageTest {
 
-	private static final String URL_HELLO_WORLD = new File("src/files/ffmpeg.zip").getAbsoluteFile().toURI().toString();
+	private static final String URL_HELLO_WORLD = Paths.get("src/files/ffmpeg.zip").toAbsolutePath().toFile().toURI()
+			.toString();
 
 	private Shell shell;
 	private Wizard wizard;
@@ -31,8 +33,9 @@ public class FfmpegWizardPageTest {
 
 	@Before
 	public void setUp() {
-		this.userDir = Paths.get("target", UUID.randomUUID().toString());
-		System.setProperty("user.dir", this.userDir.toAbsolutePath().toString());
+		this.userDir = Paths.get("target", UUID.randomUUID().toString()).toAbsolutePath();
+		System.setProperty("user.dir", this.userDir.toString());
+		Assert.assertEquals(this.userDir.toFile(), Application.getFolder());
 
 		this.shell = new Shell();
 		this.shell.setLayout(new FillLayout());
@@ -72,6 +75,7 @@ public class FfmpegWizardPageTest {
 		final File ffmpegFile = FfmpegWizardPage.downloadAsync(URL_HELLO_WORLD);
 
 		Assert.assertNotNull(ffmpegFile);
+		Assert.assertNotNull("File cannot be null!", ffmpegFile);
 		Assert.assertTrue("File should exist: " + ffmpegFile, ffmpegFile.exists());
 		Assert.assertEquals(Arrays.asList("correct"), Files.readAllLines(ffmpegFile.toPath()));
 	}
@@ -84,6 +88,7 @@ public class FfmpegWizardPageTest {
 		this.wizardPage.urlText.setText(URL_HELLO_WORLD);
 
 		final File ffmpegFile = this.wizardPage.download();
+		Assert.assertNotNull("File cannot be null!", ffmpegFile);
 		Assert.assertTrue("File should exist: " + ffmpegFile, ffmpegFile.exists());
 		Assert.assertEquals(Arrays.asList("correct"), Files.readAllLines(ffmpegFile.toPath()));
 	}
