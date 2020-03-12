@@ -156,6 +156,8 @@ public class ChapterViewer extends Composite {
 		}
 
 		if (!selectedParts.isEmpty()) {
+			final List<VideoPart> checkedChapters = new ArrayList<>(getCheckedChapters());
+
 			final List<VideoPart> newModel = new ArrayList<>(this.model);
 			final Section mergedSection = mergeParts(selectedParts);
 			final int firstIndex = newModel.indexOf(selectedParts.get(0));
@@ -165,13 +167,11 @@ public class ChapterViewer extends Composite {
 			final ISelection selection = this.viewer.getSelection();
 			setModel(newModel);
 			this.viewer.setSelection(selection);
-			check(Arrays.asList(mergedSection), true);
-			check(Arrays.asList(mergedSection.getParts()), true);
+			checkAll(false);
 
-			// if we merge chapters, it's because we want them selected
-			for (final TreeItem item : this.viewer.getTree().getSelection()) {
-				item.setChecked(true);
-			}
+			checkedChapters.add(mergedSection);
+			checkedChapters.addAll(selectedParts);
+			check(checkedChapters, true);
 		}
 	}
 

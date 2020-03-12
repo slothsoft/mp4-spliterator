@@ -73,6 +73,7 @@ If something is missing, request it via [a new issue](https://github.com/slothso
 | Version       | Issues | Changes       | Download      |
 | ------------- | ------ | ------------- | ------------- |
 | Future | [Issues](https://github.com/slothsoft/mp4-spliterator/issues) | | |
+| 1.1.1 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/3?closed=1) | Bugfixes | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.1.1)
 | 1.1.0 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/2?closed=1) | Chapter merging | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.1.0)
 | 1.0.0 | [Issues](https://github.com/slothsoft/mp4-spliterator/milestone/1?closed=1) | First prototype | [Download](https://github.com/slothsoft/mp4-spliterator/releases/tag/1.0.0)
 
