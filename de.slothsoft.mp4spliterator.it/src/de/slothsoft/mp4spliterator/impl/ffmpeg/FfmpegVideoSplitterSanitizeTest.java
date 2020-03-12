@@ -34,6 +34,12 @@ public class FfmpegVideoSplitterSanitizeTest {
 
 				{"|"},
 
+				{"\n"},
+
+				{"\r"},
+
+				{"\t"},
+
 		});
 	}
 

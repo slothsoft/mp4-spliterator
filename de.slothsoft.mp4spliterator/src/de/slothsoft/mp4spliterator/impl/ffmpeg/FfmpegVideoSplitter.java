@@ -26,7 +26,7 @@ import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 public class FfmpegVideoSplitter implements VideoSplitter {
 
 	// these are forbidden in windows at last
-	private static final String FILE_SYSTEM_FORBIDDEN_LETTERS = "\\\\" + "\\/" + "\\*" + "\\\"" + ":<>|?";
+	private static final String FILE_SYSTEM_FORBIDDEN_LETTERS = "\\\\" + "\\/" + "\\*" + "\\\"" + ":<>|?\t\r\n";
 
 	final File ffmpegFile;
 
@@ -101,7 +101,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 			VideoSplitterConfig config) {
 		String fileName = config.getPattern();
 		fileName = fileName.replace(VideoSplitterConfig.PATTERN_RUNNING_NUMBER, runningNumber);
-		fileName = fileName.replace(VideoSplitterConfig.PATTERN_CHAPTER_TITLE, sanitize(chapter.getTitle()));
+		fileName = fileName.replace(VideoSplitterConfig.PATTERN_CHAPTER_TITLE, sanitize(chapter.getTitle().trim()));
 		return getTargetFileName(targetFolder, fileName);
 	}
 
