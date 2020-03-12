@@ -194,4 +194,26 @@ public class ChapterViewerCheckTest {
 
 		Assert.assertFalse(isChecked(this.chapter));
 	}
+
+	/**
+	 * See <a href="https://github.com/slothsoft/mp4-spliterator/issues/32">Bug #32</a>.
+	 */
+
+	@Test
+	public void testNoCheckAfterMerge() throws Exception {
+		final Chapter chapter1 = new Chapter(UUID.randomUUID().toString());
+		final Chapter chapter2 = new Chapter(UUID.randomUUID().toString());
+		final Chapter chapter3 = new Chapter(UUID.randomUUID().toString());
+		final Chapter chapter4 = new Chapter(UUID.randomUUID().toString());
+		this.chapterViewer.setModel(Arrays.asList(chapter1, chapter2, chapter3, chapter4));
+
+		this.chapterViewer.checkAll(false);
+		this.chapterViewer.setSelectedChapters(Arrays.asList(chapter1, chapter2));
+		this.chapterViewer.mergeSelectedChapters();
+
+		Assert.assertTrue(isChecked(chapter1));
+		Assert.assertTrue(isChecked(chapter2));
+		Assert.assertFalse(isChecked(chapter3));
+		Assert.assertFalse(isChecked(chapter4));
+	}
 }
