@@ -5,8 +5,8 @@ jdk:
   - openjdk11
   
 # runs "test" goal on default, which misses IT
-script:
-  - mvn verify -B
+# script:
+#  - mvn verify -B
 
 # these are for starting and stopping the P2 repo
 before_install:
