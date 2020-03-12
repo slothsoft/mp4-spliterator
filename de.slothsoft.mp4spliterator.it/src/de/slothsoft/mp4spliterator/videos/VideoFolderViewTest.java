@@ -1,6 +1,7 @@
 package de.slothsoft.mp4spliterator.videos;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -11,6 +12,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
+import de.slothsoft.mp4spliterator.Mp4SpliteratorPreferences;
 
 public class VideoFolderViewTest {
 
@@ -71,5 +75,60 @@ public class VideoFolderViewTest {
 
 		Assert.assertFalse(view.hasSupportedExtension(new File("test.wav")));
 		Assert.assertFalse(view.hasSupportedExtension(new File("test.png")));
+	}
+
+	@Test
+	public void testRefresh() throws Exception {
+		final File targetFolder = new File("target/" + UUID.randomUUID().toString());
+		targetFolder.mkdirs();
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().setValue(Mp4SpliteratorPreferences.VIDEO_FOLDER,
+				targetFolder.toString());
+
+		final VideoFolderView view = openView();
+		Assert.assertEquals(0, view.viewer.getTree().getItemCount());
+
+		final File subfolder = new File(targetFolder, "sub/");
+		subfolder.mkdirs();
+
+		Assert.assertEquals(0, view.viewer.getTree().getItemCount());
+		view.refresh();
+		Assert.assertEquals(1, view.viewer.getTree().getItemCount());
+	}
+
+	@Test
+	public void testRefreshAfterPreferenceChange() throws Exception {
+		final File firstTargetFolder = new File("target/" + UUID.randomUUID().toString());
+		firstTargetFolder.mkdirs();
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().setValue(Mp4SpliteratorPreferences.VIDEO_FOLDER,
+				firstTargetFolder.toString());
+
+		final VideoFolderView view = openView();
+		Assert.assertEquals(0, view.viewer.getTree().getItemCount());
+
+		final File secondTargetFolder = new File("target/" + UUID.randomUUID().toString());
+		final File subfolder = new File(secondTargetFolder, "sub/");
+		subfolder.mkdirs();
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().setValue(Mp4SpliteratorPreferences.VIDEO_FOLDER,
+				secondTargetFolder.toString());
+
+		Assert.assertEquals(1, view.viewer.getTree().getItemCount());
+	}
+
+	@Test
+	public void testNoRefreshAfterOtherPreferenceChange() throws Exception {
+		final File firstTargetFolder = new File("target/" + UUID.randomUUID().toString());
+		firstTargetFolder.mkdirs();
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().setValue(Mp4SpliteratorPreferences.VIDEO_FOLDER,
+				firstTargetFolder.toString());
+
+		final VideoFolderView view = openView();
+		Assert.assertEquals(0, view.viewer.getTree().getItemCount());
+
+		final File secondTargetFolder = new File("target/" + UUID.randomUUID().toString());
+		final File subfolder = new File(secondTargetFolder, "sub/");
+		subfolder.mkdirs();
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().setValue("other", secondTargetFolder.toString());
+
+		Assert.assertEquals(0, view.viewer.getTree().getItemCount());
 	}
 }

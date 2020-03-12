@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -32,6 +33,12 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 
 	private Set<String> supportedExtensions;
 	TreeViewer viewer;
+
+	IPropertyChangeListener preferenceListener = event -> refresh();
+
+	public VideoFolderView() {
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -97,6 +104,12 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 			return (T) this.viewer;
 		}
 		return super.getAdapter(adapter);
+	}
+
+	@Override
+	public void dispose() {
+		Mp4SpliteratorPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+		super.dispose();
 	}
 
 	/*
