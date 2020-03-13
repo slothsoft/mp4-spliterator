@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>de.slothsoft.mp4spliterator</groupId>
 		<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2-SNAPSHOT</version>
 	</parent>
 
 	<build>
