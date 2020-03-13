@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.slothsoft.mp4spliterator</groupId>
 	<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.1.1</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -245,6 +245,6 @@
 	</build>
 	<scm>
 		<developerConnection>scm:git:https://github.com/slothsoft/mp4-spliterator.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>1.1.1</tag>
 	</scm>
 </project>
