@@ -3,6 +3,14 @@ jdk:
   - openjdk8
   - oraclejdk11
   - openjdk11
+ 
+addons:
+  apt:
+    packages:
+      - lynx
+      
+after_failure:
+  - if [ -f /home/travis/build/slothsoft/mp4-spliterator/de.slothsoft.mp4spliterator.it/target/work/configuration/*.log ]; then lynx -dump /home/travis/build/slothsoft/mp4-spliterator/de.slothsoft.mp4spliterator.it/target/work/configuration/*.log; fi
   
 # runs "test" goal on default, which misses IT
 script:
