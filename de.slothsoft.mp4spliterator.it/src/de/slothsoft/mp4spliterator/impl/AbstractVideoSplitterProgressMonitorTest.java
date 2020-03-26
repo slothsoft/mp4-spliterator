@@ -23,8 +23,7 @@ public abstract class AbstractVideoSplitterProgressMonitorTest {
 
 	@Before
 	public void setUp() {
-		this.targetFolder = new File("target/" + UUID.randomUUID().toString());
-		this.targetFolder.mkdirs();
+		this.targetFolder = AbstractVideoSplitterTest.createTargetFolder();
 
 		this.progressMonitor = new LogProgressMonitor();
 
@@ -51,8 +50,9 @@ public abstract class AbstractVideoSplitterProgressMonitorTest {
 	}
 
 	private void splitIntoChapters(final Chapter... chapters) throws VideoSplitterException, InterruptedException {
-		this.splitter.splitIntoChapters(new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters))
-				.progressMonitor(this.progressMonitor));
+		this.splitter
+				.splitIntoChapters(new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters))
+						.progressMonitor(this.progressMonitor));
 	}
 
 	private static void assertEquals(List<String> expected, List<String> actual) {

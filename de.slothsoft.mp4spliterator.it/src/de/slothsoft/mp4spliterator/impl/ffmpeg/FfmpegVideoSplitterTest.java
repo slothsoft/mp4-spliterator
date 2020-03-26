@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import de.slothsoft.mp4spliterator.core.Chapter;
 import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
+import de.slothsoft.mp4spliterator.impl.AbstractVideoSplitterTest;
 
 public class FfmpegVideoSplitterTest {
 
@@ -20,21 +21,20 @@ public class FfmpegVideoSplitterTest {
 
 	@Before
 	public void setUp() {
-		this.targetFolder = new File("target/" + UUID.randomUUID().toString());
-		this.targetFolder.mkdirs();
+		this.targetFolder = AbstractVideoSplitterTest.createTargetFolder();
 	}
 
 	@Test
 	public void testGetTargetFileName() throws Exception {
 		final String fileName = UUID.randomUUID().toString();
-		Assert.assertEquals(this.targetFolder + "\\" + fileName + ".mp4",
+		Assert.assertEquals(this.targetFolder + File.separator + fileName + ".mp4",
 				FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 	}
 
 	@Test
 	public void testGetTargetFileNameWithPart() throws Exception {
 		final String fileName = UUID.randomUUID().toString();
-		Assert.assertEquals(this.targetFolder + "\\pre " + fileName + ".mp4", FfmpegVideoSplitter
+		Assert.assertEquals(this.targetFolder + File.separator + "pre " + fileName + ".mp4", FfmpegVideoSplitter
 				.getTargetFileName(this.targetFolder, new Chapter(fileName), "pre", new VideoSplitterConfig()));
 	}
 
@@ -43,7 +43,7 @@ public class FfmpegVideoSplitterTest {
 		final String fileName = UUID.randomUUID().toString();
 		createDummyFile(FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 
-		Assert.assertEquals(this.targetFolder + "\\" + fileName + " (2).mp4",
+		Assert.assertEquals(this.targetFolder + File.separator + fileName + " (2).mp4",
 				FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 	}
 
@@ -57,7 +57,7 @@ public class FfmpegVideoSplitterTest {
 		createDummyFile(FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 		createDummyFile(FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 
-		Assert.assertEquals(this.targetFolder + "\\" + fileName + " (3).mp4",
+		Assert.assertEquals(this.targetFolder + File.separator + fileName + " (3).mp4",
 				FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 	}
 
@@ -68,7 +68,7 @@ public class FfmpegVideoSplitterTest {
 		createDummyFile(FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 		createDummyFile(FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 
-		Assert.assertEquals(this.targetFolder + "\\" + fileName + " (4).mp4",
+		Assert.assertEquals(this.targetFolder + File.separator + fileName + " (4).mp4",
 				FfmpegVideoSplitter.getTargetFileName(this.targetFolder, fileName));
 	}
 

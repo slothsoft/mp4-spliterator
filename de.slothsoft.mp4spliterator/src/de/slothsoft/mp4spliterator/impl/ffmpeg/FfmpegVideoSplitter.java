@@ -3,6 +3,7 @@ package de.slothsoft.mp4spliterator.impl.ffmpeg;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,7 +52,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 		final long videoLength = videoSplit.getVideoLength();
 		final List<VideoPart> chapters = videoSplit.getChapters();
 
-		final StringBuilder sb = new StringBuilder();
+		final List<String> commands = new ArrayList<>();
 		final int entireSize = chapters.size();
 		int index = 0;
 		final IProgressMonitor monitor = videoSplit.getProgressMonitor();
@@ -67,20 +68,25 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 
 			monitor.subTask(chapter.getTitle() + " (" + prefix + '/' + entireSizeString + ')');
 
-			sb.setLength(0);
-			sb.append('\"').append(this.ffmpegFile).append('\"');
-			sb.append(" -i ").append('\"').append(input).append('\"');
-			sb.append(" -ss ").append(startTime).append(" -t ").append(endTime);
-			sb.append(" -c ").append("copy ");
-			sb.append('\"').append(getTargetFileName(targetFolder, chapter, prefix, config)).append('\"');
+			commands.clear();
+			commands.add(this.ffmpegFile.toString());
+			commands.add("-i");
+			commands.add(input.toString());
+			commands.add("-ss");
+			commands.add(startTime);
+			commands.add("-t");
+			commands.add(endTime);
+			commands.add("-c");
+			commands.add("copy");
+			commands.add(getTargetFileName(targetFolder, chapter, prefix, config));
 
 			try {
-				final ProcessBuilder pb = new ProcessBuilder(sb.toString());
+				final ProcessBuilder pb = new ProcessBuilder(commands.toArray(new String[commands.size()]));
 				pb.redirectOutput(Redirect.INHERIT);
 				pb.redirectError(Redirect.INHERIT);
 				pb.start().waitFor();
 			} catch (final IOException | InterruptedException e) {
-				throw new VideoSplitterException(Messages.getString("FfmpegError") + '\n' + sb.toString(), e);
+				throw new VideoSplitterException(Messages.getString("FfmpegError") + '\n' + commands.toString(), e);
 			}
 			index++;
 

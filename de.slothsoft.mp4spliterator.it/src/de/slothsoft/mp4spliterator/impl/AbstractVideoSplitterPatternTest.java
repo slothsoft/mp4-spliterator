@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,8 +41,7 @@ public abstract class AbstractVideoSplitterPatternTest {
 
 	@Before
 	public void setUp() {
-		this.targetFolder = new File("target/" + UUID.randomUUID().toString());
-		this.targetFolder.mkdirs();
+		this.targetFolder = AbstractVideoSplitterTest.createTargetFolder();
 
 		this.splitter = createVideoSplitter();
 	}
@@ -69,7 +67,7 @@ public abstract class AbstractVideoSplitterPatternTest {
 	private void splitIntoChapters(VideoSplitterConfig config, final Chapter... chapters)
 			throws VideoSplitterException, InterruptedException {
 		this.splitter.splitIntoChapters(
-				new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)).config(config));
+				new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}
 
 	// TODO: test second file as well?

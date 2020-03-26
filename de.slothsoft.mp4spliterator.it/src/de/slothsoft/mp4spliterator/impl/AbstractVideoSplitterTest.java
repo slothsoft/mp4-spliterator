@@ -23,10 +23,15 @@ public abstract class AbstractVideoSplitterTest {
 
 	@Before
 	public void setUp() {
-		this.targetFolder = new File("target/" + UUID.randomUUID().toString());
-		this.targetFolder.mkdirs();
+		this.targetFolder = createTargetFolder();
 
 		this.splitter = createVideoSplitter();
+	}
+
+	public static File createTargetFolder() {
+		final File result = new File("target/" + UUID.randomUUID().toString()).getAbsoluteFile();
+		result.mkdirs();
+		return result;
 	}
 
 	protected abstract VideoSplitter createVideoSplitter();
@@ -45,7 +50,8 @@ public abstract class AbstractVideoSplitterTest {
 	}
 
 	private void splitIntoChapters(final Chapter... chapters) throws VideoSplitterException, InterruptedException {
-		this.splitter.splitIntoChapters(new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)));
+		this.splitter
+				.splitIntoChapters(new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters)));
 	}
 
 	private File createChapterFile(int number, final Chapter chapter) {
@@ -89,7 +95,7 @@ public abstract class AbstractVideoSplitterTest {
 	private void splitIntoChapters(VideoSplitterConfig config, final Chapter... chapters)
 			throws VideoSplitterException, InterruptedException {
 		this.splitter.splitIntoChapters(
-				new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapters)).config(config));
+				new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}
 
 	@Test
@@ -131,8 +137,9 @@ public abstract class AbstractVideoSplitterTest {
 
 		Assert.assertEquals(1000, config.getEndTimeShift());
 
-		this.splitter.splitIntoChapters(new VideoSplit(new File(""), this.targetFolder, Arrays.asList(chapter))
-				.videoLength(4000).config(config));
+		this.splitter
+				.splitIntoChapters(new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapter))
+						.videoLength(4000).config(config));
 
 		final File targetFile = createChapterFile(1, chapter);
 		Assert.assertTrue("File should exist: " + targetFile, targetFile.exists());

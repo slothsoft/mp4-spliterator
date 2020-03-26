@@ -4,20 +4,28 @@ jdk:
   - oraclejdk11
   - openjdk11
  
+# Simulates a display
+dist: xenial
+services:
+  - xvfb
+
 addons:
   apt:
     packages:
-      - lynx
+      - at-spi2-core # against "Error retrieving accessibility bus address"
+      - libwebkitgtk-3.0 # against "Please ensure Webkit with its Gtk 3.x bindings installed. Webkit2 API level preferred."
       
+# runs "test" goal on default, which misses IT
+script:
+- mvn verify -B
+ 
+# export the IT log file
 after_failure:
   - if [ -f /home/travis/build/slothsoft/mp4-spliterator/de.slothsoft.mp4spliterator.it/target/work/configuration/*.log ]; then lynx -dump /home/travis/build/slothsoft/mp4-spliterator/de.slothsoft.mp4spliterator.it/target/work/configuration/*.log; fi
   
-# runs "test" goal on default, which misses IT
-# script:
-# - mvn verify -B
-
 # these are for starting and stopping the P2 repo
 before_install:
   - mvn -f maven-p2/pom.xml install -Pstart -B
+  - chmod a+x "/home/travis/build/slothsoft/mp4-spliterator/de.slothsoft.mp4spliterator.it/src/dummy/ffmpeg.sh" # against "Cannot run program ffmpeg.sh"
 after_script:
   - mvn -f maven-p2/pom.xml package -Pstop -B

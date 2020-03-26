@@ -1,7 +1,5 @@
 package de.slothsoft.mp4spliterator.impl.ffmpeg;
 
-import java.io.File;
-
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.impl.AbstractVideoSplitterProgressMonitorTest;
 
@@ -9,7 +7,7 @@ public class FfmpegVideoSplitterDummyProgressMonitorTest extends AbstractVideoSp
 
 	@Override
 	protected VideoSplitter createVideoSplitter() {
-		return new FfmpegVideoSplitter(new File("src/dummy/ffmpeg.bat"));
+		return new FfmpegVideoSplitter(FfmpegVideoSplitterDummyTest.getFfmpegFile());
 	}
 
 	@Override
