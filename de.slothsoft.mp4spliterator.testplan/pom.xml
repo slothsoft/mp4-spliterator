@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>de.slothsoft.mp4spliterator.testplan</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+
+	<parent>
+		<groupId>de.slothsoft.mp4spliterator</groupId>
+		<artifactId>de.slothsoft.mp4spliterator.build</artifactId>
+		<version>1.1.2-SNAPSHOT</version>
+	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<configuration>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<application>de.slothsoft.mp4spliterator.application</application>
+            		<appArgLine>-nl en</appArgLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

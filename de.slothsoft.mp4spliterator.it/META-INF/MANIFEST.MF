@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mp4Spliterator IT Plug-in
+Bundle-Name: Mp4Spliterator IT Fragment
 Bundle-SymbolicName: de.slothsoft.mp4spliterator.it;singleton:=true
 Bundle-Version: 1.1.2.qualifier
 Bundle-Vendor: Slothsoft
