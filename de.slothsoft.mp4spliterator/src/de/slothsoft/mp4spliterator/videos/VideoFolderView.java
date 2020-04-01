@@ -20,6 +20,7 @@ import org.eclipse.ui.part.ViewPart;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPreferences;
+import de.slothsoft.mp4spliterator.common.GlobalConstants;
 import de.slothsoft.mp4spliterator.common.Refreshable;
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
 import de.slothsoft.mp4spliterator.core.VideoReader;
@@ -50,6 +51,7 @@ public class VideoFolderView extends ViewPart implements Refreshable {
 		this.viewer.setInput(new File(Mp4SpliteratorPlugin.getDefault().getPreferenceStore()
 				.getString(Mp4SpliteratorPreferences.VIDEO_FOLDER)));
 		this.viewer.addDoubleClickListener(e -> openSelectedFile());
+		this.viewer.getTree().setData(GlobalConstants.DATA_ID, "videoFolderViewer");
 
 		getSite().setSelectionProvider(this.viewer);
 	}

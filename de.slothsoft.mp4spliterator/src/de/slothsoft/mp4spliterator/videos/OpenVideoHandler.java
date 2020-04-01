@@ -13,6 +13,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import de.slothsoft.mp4spliterator.common.GlobalConstants;
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
 import de.slothsoft.mp4spliterator.core.Video;
 import de.slothsoft.mp4spliterator.core.VideoReader;
@@ -21,10 +22,12 @@ public class OpenVideoHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final FileDialog dialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.OPEN);
-		dialog.setFilterExtensions(
-				VideoReader.getAllSupportedExtensions().stream().map(ext -> "*." + ext).toArray(String[]::new));
-		final String videoFileString = dialog.open();
+		final String videoFileString = GlobalConstants.openNativeDialog(HandlerUtil.getActiveShell(event), shell -> {
+			final FileDialog dialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.OPEN);
+			dialog.setFilterExtensions(
+					VideoReader.getAllSupportedExtensions().stream().map(ext -> "*." + ext).toArray(String[]::new));
+			return dialog.open();
+		});
 		if (videoFileString != null) {
 			openVideoFile(new File(videoFileString));
 		}

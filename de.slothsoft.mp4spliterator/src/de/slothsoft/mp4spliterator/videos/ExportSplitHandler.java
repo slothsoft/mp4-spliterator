@@ -15,6 +15,7 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import de.slothsoft.mp4spliterator.common.GlobalConstants;
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
 import de.slothsoft.mp4spliterator.core.Video;
 import de.slothsoft.mp4spliterator.core.VideoPart;
@@ -27,8 +28,7 @@ public class ExportSplitHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final DirectoryDialog dialog = new DirectoryDialog(HandlerUtil.getActiveShell(event), SWT.SAVE);
-		final String targetFolderString = dialog.open();
+		final String targetFolderString = openDirectoryDialog(event);
 		if (targetFolderString != null) {
 
 			final VideoEditor editor = (VideoEditor) HandlerUtil.getActiveEditor(event);
@@ -52,6 +52,13 @@ public class ExportSplitHandler extends AbstractHandler {
 		return null;
 	}
 
+	private static String openDirectoryDialog(ExecutionEvent event) {
+		return GlobalConstants.openNativeDialog(HandlerUtil.getActiveShell(event), shell -> {
+			final DirectoryDialog dialog = new DirectoryDialog(shell, SWT.SAVE);
+			return dialog.open();
+		});
+	}
+
 	// TODO: I think we can test the following part (to see the right config etc.
 	// is used)
 
@@ -61,12 +68,14 @@ public class ExportSplitHandler extends AbstractHandler {
 		final Video video;
 		final List<VideoPart> selectedChapters;
 		final String targetFolderString;
+		final boolean openTargetFolder;
 
 		public ExportSplitOperation(VideoEditor editor, String targetFolderString) {
 			this.file = editor.getEditorInput().getFile();
 			this.video = editor.getEditorInput().getVideo();
 			this.selectedChapters = editor.getCheckedChapters();
 			this.targetFolderString = targetFolderString;
+			this.openTargetFolder = !GlobalConstants.SWTBOT_MODE;
 		}
 
 		@Override
@@ -77,7 +86,10 @@ public class ExportSplitHandler extends AbstractHandler {
 				splitter.splitIntoChapters(new VideoSplit(this.file, targetFolder, this.selectedChapters)
 						.videoLength(this.video.getLength()).config(VideoSplitterConfig.forPreferences())
 						.progressMonitor(monitor));
-				Program.launch(this.targetFolderString);
+
+				if (this.openTargetFolder) {
+					Program.launch(this.targetFolderString);
+				}
 			} catch (final VideoSplitterException e) {
 				new StatusBuilder(e.getMessage()).exception(e).show();
 			}

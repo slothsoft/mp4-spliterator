@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import de.slothsoft.mp4spliterator.common.GlobalConstants;
 import de.slothsoft.mp4spliterator.common.StatusBuilder;
 import de.slothsoft.mp4spliterator.core.Section;
 import de.slothsoft.mp4spliterator.core.StringifyUtil;
@@ -65,6 +66,7 @@ public class ChapterViewer extends Composite {
 		this.viewer.setContentProvider(new TreeArrayContentProvider());
 		this.viewer.setLabelProvider(new LabelProvider());
 		this.viewer.getTree().addListener(SWT.Selection, this::performCheckIfNecessary);
+		this.viewer.getTree().setData(GlobalConstants.DATA_ID, "chapterViewer");
 
 		final TreeViewerColumn titleColumn = createColumn(this.viewer, Messages.getString("Title"));
 		titleColumn.setLabelProvider(new FunctionLabelProvider(VideoPart::getTitle));

@@ -25,6 +25,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import de.slothsoft.mp4spliterator.Mp4SpliteratorImages;
 import de.slothsoft.mp4spliterator.Mp4SpliteratorPlugin;
+import de.slothsoft.mp4spliterator.common.GlobalConstants;
 import de.slothsoft.mp4spliterator.core.VideoPart;
 
 public class VideoEditor extends EditorPart {
@@ -101,6 +102,8 @@ public class VideoEditor extends EditorPart {
 			getSite().getService(IMenuService.class).populateContributionManager(toolBarManager, toolbarUrl);
 			toolBarManager.update(true);
 			section.setTextClient(toolbar);
+
+			section.setData(GlobalConstants.DATA_ID, toolbarUrl.substring(toolbarUrl.lastIndexOf('.') + 1));
 		}
 
 		final Composite client = toolkit.createComposite(section, SWT.WRAP);

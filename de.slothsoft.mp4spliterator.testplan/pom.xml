@@ -21,7 +21,7 @@
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
 					<application>de.slothsoft.mp4spliterator.application</application>
-            		<appArgLine>-nl en</appArgLine>
+					<appArgLine>-nl en -swtBot</appArgLine>
 				</configuration>
 			</plugin>
 		</plugins>
