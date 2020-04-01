@@ -80,6 +80,8 @@ public abstract class AbstractMp4SpliteratorTest {
 		final SWTBotShell activeShell = this.bot.activeShell();
 
 		if (InitWizard.TITLE.equals(activeShell.getText())) {
+			System.out.println("Initialized Application to ffmpeg: " + getFfmpegFile());
+
 			// we have to initialize the the application the very first time
 			final SWTBotText fileText = this.bot.textWithLabel(InitWizard.TEXT_FILE);
 			fileText.setText(getFfmpegFile().toString());
@@ -88,13 +90,7 @@ public abstract class AbstractMp4SpliteratorTest {
 			finishButton.click();
 		}
 
-		System.out.println("AbstractMp4SpliteratorTest.skipInitWizard()");
-		System.out.println(getModuleFolder());
-
 		final SWTBotShell newActiveShell = this.bot.activeShell();
-		if (!MainWindow.TITLE.equals(newActiveShell.getText())) {
-			this.bot.sleep(5000);
-		}
 		Assert.assertEquals(MainWindow.TITLE, newActiveShell.getText());
 	}
 
