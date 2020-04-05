@@ -10,19 +10,19 @@ import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.impl.AbstractVideoSplitterPatternTest;
 
 @RunWith(Parameterized.class)
-public class FfmpegVideoSplitterDummyPatternTest extends AbstractVideoSplitterPatternTest {
+public class FfmpegVideoSplitterPatternTest extends AbstractVideoSplitterPatternTest {
 
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> data() {
 		return createData();
 	}
 
-	public FfmpegVideoSplitterDummyPatternTest(String pattern, String expectedFileName) {
+	public FfmpegVideoSplitterPatternTest(String pattern, String expectedFileName) {
 		super(pattern, expectedFileName);
 	}
 
 	@Override
 	protected VideoSplitter createVideoSplitter() {
-		return new FfmpegVideoSplitter(FfmpegVideoSplitterDummyTest.getFfmpegFile());
+		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile());
 	}
 }

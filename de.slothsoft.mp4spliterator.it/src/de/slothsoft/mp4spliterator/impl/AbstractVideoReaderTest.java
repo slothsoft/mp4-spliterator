@@ -11,6 +11,11 @@ import de.slothsoft.mp4spliterator.core.Video;
 import de.slothsoft.mp4spliterator.core.VideoPart;
 import de.slothsoft.mp4spliterator.core.VideoReader;
 
+/**
+ * This abstract test class is used to test the basic functionality of the
+ * {@link VideoReader}.
+ */
+
 public abstract class AbstractVideoReaderTest {
 
 	private VideoReader reader;

@@ -17,33 +17,26 @@ import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
 /**
- * This abstract test class is used to test if the config for the file pattern is
- * implemented correctly.
+ * This abstract test class is used to test if the resulting files have their forbidden
+ * symbols escaped.
  *
- * @see SplitFileNameGeneratorPatternTest
+ * @since 1.2.0
+ * @see SplitFileNameGeneratorSanitizeTest
  */
 
-public abstract class AbstractVideoSplitterPatternTest {
+public abstract class AbstractVideoSplitterSanitizeTest {
 
 	public static Collection<Object[]> createData() {
-		return Arrays.asList(new Object[][]{
-
-				{VideoSplitterConfig.PATTERN_RUNNING_NUMBER, "1"},
-
-				{VideoSplitterConfig.PATTERN_CHAPTER_TITLE, "A"}
-
-		});
+		return SplitFileNameGeneratorSanitizeTest.data();
 	}
 
-	private final String pattern;
-	private final String expectedFileName;
+	private final String forbiddenSymbol;
 
 	private File targetFolder;
 	private VideoSplitter splitter;
 
-	public AbstractVideoSplitterPatternTest(String pattern, String expectedFileName) {
-		this.pattern = pattern;
-		this.expectedFileName = expectedFileName;
+	public AbstractVideoSplitterSanitizeTest(String forbiddenSymbol) {
+		this.forbiddenSymbol = forbiddenSymbol;
 	}
 
 	@Before
@@ -56,15 +49,14 @@ public abstract class AbstractVideoSplitterPatternTest {
 	protected abstract VideoSplitter createVideoSplitter();
 
 	@Test
-	public void testPatternUsed() throws Exception {
-		final Chapter chapter = new Chapter("A").startTime(1234).endTime(5678);
+	public void testSplitIntoChaptersWithEndTimeShift() throws Exception {
+		final Chapter chapter = new Chapter("abc" + this.forbiddenSymbol + "def").startTime(1234).endTime(5678);
 
-		final VideoSplitterConfig config = new VideoSplitterConfig().pattern(this.pattern);
-		Assert.assertEquals(this.pattern, config.getPattern());
+		final VideoSplitterConfig config = new VideoSplitterConfig().pattern(VideoSplitterConfig.PATTERN_CHAPTER_TITLE);
 
 		splitIntoChapters(config, chapter);
 
-		final File targetFile = new File(this.targetFolder, this.expectedFileName + ".mp4");
+		final File targetFile = new File(this.targetFolder, "abc_def.mp4");
 		Assert.assertTrue("File should exist: " + targetFile, targetFile.exists());
 
 		final List<String> lines = Files.readAllLines(targetFile.toPath());
@@ -76,7 +68,4 @@ public abstract class AbstractVideoSplitterPatternTest {
 		this.splitter.splitIntoChapters(
 				new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}
-
-	// TODO: test second file as well?
-
 }

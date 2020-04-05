@@ -2,9 +2,11 @@ package de.slothsoft.mp4spliterator.impl;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,35 +19,38 @@ import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
 /**
- * This abstract test class is used to test if the config for the file pattern is
- * implemented correctly.
+ * This abstract test class is used to test if the prefix of the resulting files is
+ * calculated correctly.
  *
- * @see SplitFileNameGeneratorPatternTest
+ * @since 1.2.0
+ * @see SplitFileNameGeneratorPrefixTest
  */
 
-public abstract class AbstractVideoSplitterPatternTest {
+public abstract class AbstractVideoSplitterPrefixTest {
 
 	public static Collection<Object[]> createData() {
-		return Arrays.asList(new Object[][]{
-
-				{VideoSplitterConfig.PATTERN_RUNNING_NUMBER, "1"},
-
-				{VideoSplitterConfig.PATTERN_CHAPTER_TITLE, "A"}
-
-		});
+		final List<Object[]> result = new ArrayList<>();
+		for (final Object[] possibleData : SplitFileNameGeneratorPrefixTest.data()) {
+			final int count = ((Integer) possibleData[1]).intValue();
+			if (count > 0 && count < 10) {
+				result.add(possibleData);
+			}
+		}
+		return result;
 	}
 
-	private final String pattern;
-	private final String expectedFileName;
+	private final int index;
+	private final int count;
+	private final String result;
 
 	private File targetFolder;
 	private VideoSplitter splitter;
 
-	public AbstractVideoSplitterPatternTest(String pattern, String expectedFileName) {
-		this.pattern = pattern;
-		this.expectedFileName = expectedFileName;
+	public AbstractVideoSplitterPrefixTest(int index, int count, String result) {
+		this.index = index;
+		this.count = count;
+		this.result = result;
 	}
-
 	@Before
 	public void setUp() {
 		this.targetFolder = AbstractVideoSplitterTest.createTargetFolder();
@@ -56,15 +61,22 @@ public abstract class AbstractVideoSplitterPatternTest {
 	protected abstract VideoSplitter createVideoSplitter();
 
 	@Test
-	public void testPatternUsed() throws Exception {
-		final Chapter chapter = new Chapter("A").startTime(1234).endTime(5678);
+	public void testSplitIntoChaptersWithEndTimeShift() throws Exception {
+		final Chapter[] chapters = new Chapter[this.count];
+		for (int i = 0; i < this.count; i++) {
+			chapters[i] = new Chapter(UUID.randomUUID().toString());
 
-		final VideoSplitterConfig config = new VideoSplitterConfig().pattern(this.pattern);
-		Assert.assertEquals(this.pattern, config.getPattern());
+			if (i == this.index) {
+				chapters[i].startTime(1234).endTime(5678);
+			}
+		}
 
-		splitIntoChapters(config, chapter);
+		final VideoSplitterConfig config = new VideoSplitterConfig()
+				.pattern(VideoSplitterConfig.PATTERN_RUNNING_NUMBER);
 
-		final File targetFile = new File(this.targetFolder, this.expectedFileName + ".mp4");
+		splitIntoChapters(config, chapters);
+
+		final File targetFile = new File(this.targetFolder, this.result + ".mp4");
 		Assert.assertTrue("File should exist: " + targetFile, targetFile.exists());
 
 		final List<String> lines = Files.readAllLines(targetFile.toPath());
@@ -76,7 +88,4 @@ public abstract class AbstractVideoSplitterPatternTest {
 		this.splitter.splitIntoChapters(
 				new VideoSplit(new File("source.mp4"), this.targetFolder, Arrays.asList(chapters)).config(config));
 	}
-
-	// TODO: test second file as well?
-
 }

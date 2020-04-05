@@ -1,64 +1,29 @@
 package de.slothsoft.mp4spliterator.impl.ffmpeg;
 
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import de.slothsoft.mp4spliterator.core.VideoSplitter;
+import de.slothsoft.mp4spliterator.impl.AbstractVideoSplitterPrefixTest;
+
 @RunWith(Parameterized.class)
-public class FfmpegVideoSplitterPrefixTest {
+public class FfmpegVideoSplitterPrefixTest extends AbstractVideoSplitterPrefixTest {
 
 	@Parameters(name = "{0} / {1}")
-	@SuppressWarnings("boxing")
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][]{
-
-				{0, 0, "1"},
-
-				{1, 5, "2"},
-
-				{2, 9, "3"},
-
-				{3, 10, "04"},
-
-				{4, 99, "05"},
-
-				{5, 100, "006"},
-
-				{6, 999, "007"},
-
-				{7, 1000, "0008"}
-
-		});
+		return AbstractVideoSplitterPrefixTest.createData();
 	}
-
-	private final int index;
-	private final int count;
-	private final String result;
 
 	public FfmpegVideoSplitterPrefixTest(int index, int count, String result) {
-		this.index = index;
-		this.count = count;
-		this.result = result;
+		super(index, count, result);
 	}
 
-	@Test
-	public void testGetPrefix() throws Exception {
-		Assert.assertEquals("Prefix is wrong!", this.result, FfmpegVideoSplitter.getPrefix(this.index, this.count));
-	}
-
-	@Test
-	public void testAllNumbers() throws Exception {
-		final int resultLength = this.result.length();
-
-		for (int i = 0; i < this.count; i++) {
-			final String prefix = FfmpegVideoSplitter.getPrefix(i, this.count);
-			Assert.assertEquals("Prefix for " + i + " is wrong!", resultLength, prefix.length());
-		}
+	@Override
+	protected VideoSplitter createVideoSplitter() {
+		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile());
 	}
 
 }

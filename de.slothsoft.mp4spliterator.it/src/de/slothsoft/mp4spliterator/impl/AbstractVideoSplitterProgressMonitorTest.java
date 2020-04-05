@@ -15,6 +15,11 @@ import de.slothsoft.mp4spliterator.core.VideoSplit;
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
+/**
+ * This abstract test class is used to test if the progress monitor gets the correct
+ * values.
+ */
+
 public abstract class AbstractVideoSplitterProgressMonitorTest {
 
 	private File targetFolder;

@@ -16,6 +16,11 @@ import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.core.VideoSplitterConfig;
 import de.slothsoft.mp4spliterator.core.VideoSplitterException;
 
+/**
+ * This abstract test class contains the most basic tests: can a video split into separate
+ * chapters.
+ */
+
 public abstract class AbstractVideoSplitterTest {
 
 	private File targetFolder;
