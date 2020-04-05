@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +29,8 @@ public abstract class AbstractMp4SpliteratorTest {
 	protected static File getFfmpegFile() {
 		if (ffmpegFile == null) {
 			// absolute location of the IT module's dummy/ folder
-			final File dummyFolder = new File(getModuleFolder(), "../de.slothsoft.mp4spliterator.it/src/dummy");
+			final File dummyFolder = new File(getModuleFolder(), "../de.slothsoft.mp4spliterator.it/src/dummy").toPath()
+					.normalize().toFile();
 
 			final String osName = System.getProperty("os.name").toLowerCase();
 			if (osName.contains("win")) {
@@ -37,6 +38,8 @@ public abstract class AbstractMp4SpliteratorTest {
 			} else {
 				ffmpegFile = new File(dummyFolder, "ffmpeg.sh");
 			}
+
+			Assert.assertTrue("ffmpeg file should exist: " + ffmpegFile, ffmpegFile.exists());
 		}
 		return ffmpegFile;
 	}
@@ -47,7 +50,9 @@ public abstract class AbstractMp4SpliteratorTest {
 
 	protected static File createTempFolder() {
 		final File result = new File(getTargetFolder(), UUID.randomUUID().toString());
-		result.mkdirs();
+		if (!result.exists()) {
+			result.mkdirs();
+		}
 		return result;
 	}
 
@@ -86,8 +91,12 @@ public abstract class AbstractMp4SpliteratorTest {
 			final SWTBotText fileText = this.bot.textWithLabel(InitWizard.TEXT_FILE);
 			fileText.setText(getFfmpegFile().toString());
 
-			final SWTBotButton finishButton = this.bot.button(Common.BUTTON_FINISH);
-			finishButton.click();
+			try {
+				this.bot.button(Common.BUTTON_FINISH).click();
+			} catch (final TimeoutException e) {
+				this.bot.button(Common.BUTTON_CANCEL).click();
+				throw e; // so other tests can run
+			}
 		}
 
 		final SWTBotShell newActiveShell = this.bot.activeShell();
@@ -95,7 +104,7 @@ public abstract class AbstractMp4SpliteratorTest {
 	}
 
 	@After
-	public void tearDown() {
+	public final void tearDownRunnables() {
 		this.tearDowns.forEach(Runnable::run);
 	}
 
