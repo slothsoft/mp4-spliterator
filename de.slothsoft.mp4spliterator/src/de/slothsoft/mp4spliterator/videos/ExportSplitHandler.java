@@ -59,9 +59,6 @@ public class ExportSplitHandler extends AbstractHandler {
 		});
 	}
 
-	// TODO: I think we can test the following part (to see the right config etc.
-	// is used)
-
 	static class ExportSplitOperation implements IRunnableWithProgress {
 
 		final File file;

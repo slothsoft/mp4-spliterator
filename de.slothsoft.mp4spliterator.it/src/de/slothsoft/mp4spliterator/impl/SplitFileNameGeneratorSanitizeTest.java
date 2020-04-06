@@ -21,7 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class SplitFileNameGeneratorSanitizeTest {
 
 	@Parameters(name = "{0}")
-	public static Collection<Object[]> data() {
+	public static Collection<Object[]> createData() {
 		return Arrays.asList(new Object[][]{
 
 				{"\\"},

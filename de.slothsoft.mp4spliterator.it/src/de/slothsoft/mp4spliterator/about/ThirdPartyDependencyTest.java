@@ -6,11 +6,14 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ThirdPartyDependencyTest {
+
+	private final ThirdPartyDependency classUnderTest = new ThirdPartyDependency("");
 
 	@Test
 	public void testReadDefaults() throws Exception {
@@ -108,4 +111,35 @@ public class ThirdPartyDependencyTest {
 		Assert.assertEquals("G", dep.getLicenseUrl());
 	}
 
+	@Test
+	public void testSetUrl() throws Exception {
+		final String value = UUID.randomUUID().toString();
+		this.classUnderTest.setUrl(value);
+
+		Assert.assertEquals(value, this.classUnderTest.getUrl());
+	}
+
+	@Test
+	public void testUrl() throws Exception {
+		final String value = UUID.randomUUID().toString();
+		this.classUnderTest.url(value);
+
+		Assert.assertEquals(value, this.classUnderTest.getUrl());
+	}
+
+	@Test
+	public void testSetLicenseUrl() throws Exception {
+		final String value = UUID.randomUUID().toString();
+		this.classUnderTest.setLicenseUrl(value);
+
+		Assert.assertEquals(value, this.classUnderTest.getLicenseUrl());
+	}
+
+	@Test
+	public void testLicenseUrl() throws Exception {
+		final String value = UUID.randomUUID().toString();
+		this.classUnderTest.licenseUrl(value);
+
+		Assert.assertEquals(value, this.classUnderTest.getLicenseUrl());
+	}
 }
