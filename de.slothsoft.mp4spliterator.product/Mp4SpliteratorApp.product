@@ -43,6 +43,7 @@
 
    <features>
       <feature id="de.slothsoft.mp4spliterator.feature"/>
+      <feature id="de.slothsoft.mp4spliterator.nl_de.feature"/>
    </features>
 
    <configurations>

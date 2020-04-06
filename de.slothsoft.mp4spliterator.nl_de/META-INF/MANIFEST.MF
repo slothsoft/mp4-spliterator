@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mp4Spliterator German Fragment
+Bundle-SymbolicName: de.slothsoft.mp4spliterator.nl_de;singleton:=true
+Bundle-Version: 1.1.2.qualifier
+Bundle-Vendor: Slothsoft
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Fragment-Host: de.slothsoft.mp4spliterator

@@ -10,6 +10,10 @@
 		<module>de.slothsoft.mp4spliterator</module>
 		<module>de.slothsoft.mp4spliterator.it</module>
 		<module>de.slothsoft.mp4spliterator.feature</module>
+		
+		<module>de.slothsoft.mp4spliterator.nl_de</module>
+		<module>de.slothsoft.mp4spliterator.nl_de.feature</module>
+		
 		<module>de.slothsoft.mp4spliterator.product</module>
 		<module>de.slothsoft.mp4spliterator.testplan</module>
 
