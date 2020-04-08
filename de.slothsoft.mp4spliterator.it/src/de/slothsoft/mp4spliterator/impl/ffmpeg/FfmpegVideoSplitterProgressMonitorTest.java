@@ -7,7 +7,7 @@ public class FfmpegVideoSplitterProgressMonitorTest extends AbstractVideoSplitte
 
 	@Override
 	protected VideoSplitter createVideoSplitter() {
-		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile());
+		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile()).loggingEnabled(false);
 	}
 
 	@Override

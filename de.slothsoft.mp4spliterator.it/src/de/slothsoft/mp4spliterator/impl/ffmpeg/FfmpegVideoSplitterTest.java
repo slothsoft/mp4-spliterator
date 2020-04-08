@@ -2,14 +2,20 @@ package de.slothsoft.mp4spliterator.impl.ffmpeg;
 
 import java.io.File;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import de.slothsoft.mp4spliterator.core.VideoSplitter;
 import de.slothsoft.mp4spliterator.impl.AbstractVideoSplitterTest;
 
 public class FfmpegVideoSplitterTest extends AbstractVideoSplitterTest {
 
+	private FfmpegVideoSplitter videoSplitter;
+
 	@Override
 	protected VideoSplitter createVideoSplitter() {
-		return new FfmpegVideoSplitter(getFfmpegFile());
+		this.videoSplitter = new FfmpegVideoSplitter(getFfmpegFile()).loggingEnabled(false);
+		return this.videoSplitter;
 	}
 
 	static File getFfmpegFile() {
@@ -32,4 +38,21 @@ public class FfmpegVideoSplitterTest extends AbstractVideoSplitterTest {
 				throw new UnsupportedOperationException("Cannot handle OS " + OperatingSystem.getCurrent() + "!");
 		}
 	}
+
+	@Test
+	public void testSetLoggingEnabled() throws Exception {
+		final boolean value = true;
+		this.videoSplitter.setLoggingEnabled(value);
+
+		Assert.assertTrue(this.videoSplitter.isLoggingEnabled());
+	}
+
+	@Test
+	public void testLoggingEnabled() throws Exception {
+		final boolean value = false;
+		this.videoSplitter.loggingEnabled(value);
+
+		Assert.assertFalse(this.videoSplitter.isLoggingEnabled());
+	}
+
 }

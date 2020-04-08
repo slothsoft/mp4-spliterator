@@ -30,6 +30,7 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 
 	final File ffmpegFile;
 	final NumberFormat integerFormat = NumberFormat.getInstance();
+	boolean loggingEnabled = true;
 
 	public FfmpegVideoSplitter() {
 		final String ffmpegFileString = Mp4SpliteratorPlugin.getDefault().getPreferenceStore()
@@ -83,8 +84,10 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 
 			try {
 				final ProcessBuilder pb = new ProcessBuilder(commands.toArray(new String[commands.size()]));
-				pb.redirectOutput(Redirect.INHERIT);
-				pb.redirectError(Redirect.INHERIT);
+				if (this.loggingEnabled) {
+					pb.redirectOutput(Redirect.INHERIT);
+					pb.redirectError(Redirect.INHERIT);
+				}
 				pb.start().waitFor();
 			} catch (final IOException | InterruptedException e) {
 				throw new VideoSplitterException(Messages.getString("FfmpegError") + '\n' + commands.toString(), e);
@@ -97,6 +100,19 @@ public class FfmpegVideoSplitter implements VideoSplitter {
 			}
 		}
 		monitor.done();
+	}
+
+	public boolean isLoggingEnabled() {
+		return this.loggingEnabled;
+	}
+
+	public FfmpegVideoSplitter loggingEnabled(boolean newLoggingEnabled) {
+		setLoggingEnabled(newLoggingEnabled);
+		return this;
+	}
+
+	public void setLoggingEnabled(boolean loggingEnabled) {
+		this.loggingEnabled = loggingEnabled;
 	}
 
 }

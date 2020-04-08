@@ -27,6 +27,6 @@ public class FfmpegVideoSplitterConfigTest extends AbstractVideoSplitterConfigTe
 
 	@Override
 	protected VideoSplitter createVideoSplitter() {
-		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile());
+		return new FfmpegVideoSplitter(FfmpegVideoSplitterTest.getFfmpegFile()).loggingEnabled(false);
 	}
 }
